@@ -1,0 +1,115 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GroundStation_v6/Navigation/Heading.cs">
+    <Files>
+      <File FileName="../../../../../../media/1CDB-A897/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Navigation/WindowInput.cs" Line="7" Column="9" />
+      <File FileName="../../../../../../media/1CDB-A897/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Navigation/Position.cs" Line="7" Column="24" />
+      <File FileName="../../../Allcode2/v12beta/GroundStation_v10/GroundStation_v6/Navigation/WindowInput.cs" Line="7" Column="9" />
+      <File FileName="../../../Allcode2/v12beta/GroundStation_v10/GroundStation_v6/Navigation/Position.cs" Line="7" Column="24" />
+      <File FileName="../../../Allcode2/v12beta/GroundStation_v10/GroundStation_v6/Input/FileDebug/PwmReader.cs" Line="3" Column="24" />
+      <File FileName="GroundStation_v6/Program.cs" Line="119" Column="1" />
+      <File FileName="Exec/Main.cs" Line="8" Column="34" />
+      <File FileName="GroundStation_v6/Output/Output.cs" Line="51" Column="1" />
+      <File FileName="GroundStation_v6/Messages/Message.cs" Line="32" Column="1" />
+      <File FileName="GroundStation_v6/Messages/ImuEulerMessage.cs" Line="257" Column="11" />
+      <File FileName="GroundStation_v6/Messages/ImuRawMessage.cs" Line="60" Column="1" />
+      <File FileName="GroundStation_v6/Messages/AdcMessage.cs" Line="187" Column="6" />
+      <File FileName="GroundStation_v6/Messages/PwmMessage.cs" Line="152" Column="1" />
+      <File FileName="GroundStation_v6/Messages/GpsMessage.cs" Line="40" Column="3" />
+      <File FileName="GroundStation_v6/Input/SerialInput.cs" Line="51" Column="15" />
+      <File FileName="GroundStation_v6/Input/Input.cs" Line="37" Column="25" />
+      <File FileName="GroundStation_v6/Messages/Database.cs" Line="113" Column="1" />
+      <File FileName="GroundStation_v6/AircraftPerformance.cs" Line="14" Column="5" />
+      <File FileName="GroundStation_v6/Navigation/Altitude.cs" Line="62" Column="5" />
+      <File FileName="GroundStation_v6/Navigation/Speed.cs" Line="36" Column="5" />
+      <File FileName="GroundStation_v6/Navigation/Heading.cs" Line="59" Column="1" />
+      <File FileName="GroundStation_v6/Navigation/ConsoleInput.cs" Line="116" Column="14" />
+      <File FileName="GroundStation_v6/Processing/PID.cs" Line="177" Column="6" />
+      <File FileName="GroundStation_v6/Processing/PIDManager.cs" Line="303" Column="23" />
+      <File FileName="GroundStation_v6/GlobalArea.cs" Line="100" Column="1" />
+      <File FileName="GroundStation_v6/Navigation/NavManager.cs" Line="97" Column="1" />
+      <File FileName="GroundStation_v6/Messages/Fields/Field.cs" Line="100" Column="22" />
+      <File FileName="GroundStation_v6/Navigation/UpperLayer.cs" Line="89" Column="1" />
+      <File FileName="Visual/Main.cs" Line="15" Column="1" />
+      <File FileName="Visual/MainWindow.cs" Line="1" Column="1" />
+      <File FileName="GroundStation_v6/Navigation/WindowInput.cs" Line="7" Column="9" />
+      <File FileName="GroundStation_v6/Messages/Fields/Field2.cs" Line="58" Column="6" />
+      <File FileName="GroundStation_v6/Navigation/LatNav.cs" Line="64" Column="1" />
+      <File FileName="GroundStation_v6/Processing/RollPID.cs" Line="11" Column="146" />
+      <File FileName="GroundStation_v6/Processing/PitchPID.cs" Line="11" Column="37" />
+      <File FileName="GroundStation_v6/Processing/ThrottlePid.cs" Line="11" Column="150" />
+      <File FileName="GroundStation_v6/Processing/YawPID.cs" Line="11" Column="145" />
+      <File FileName="GroundStation_v6/Point/Segment2D.cs" Line="21" Column="1" />
+      <File FileName="GroundStation_v6/Point/WgsPoint.cs" Line="81" Column="3" />
+      <File FileName="GroundStation_v6/Point/Point.cs" Line="3" Column="24" />
+      <File FileName="GroundStation_v6/Point/HayPoint.cs" Line="11" Column="29" />
+      <File FileName="GroundStation_v6/Navigation/Position.cs" Line="7" Column="24" />
+      <File FileName="GroundStation_v6/Input/FileDebug/FileInput.cs" Line="43" Column="21" />
+      <File FileName="GroundStation_v6/Input/FileDebug/GpsReader.cs" Line="42" Column="4" />
+      <File FileName="GroundStation_v6/Input/FileDebug/AdcReader.cs" Line="35" Column="30" />
+      <File FileName="GroundStation_v6/Input/FileDebug/PwmReader.cs" Line="3" Column="24" />
+      <File FileName="GroundStation_v6/Input/FileDebug/ImuReader.cs" Line="27" Column="1" />
+      <File FileName="GroundStation_v6/Messages/GpsDopMessage.cs" Line="35" Column="3" />
+      <File FileName="GroundStation_v6/Input/FileInput.cs" Line="24" Column="3" />
+      <File FileName="GroundStation_v6/Messages/GpsPosMessage.cs" Line="217" Column="33" />
+      <File FileName="GroundStation_v6/Output/Path.cs" Line="17" Column="4" />
+      <File FileName="GroundStation_v6/Input/FileDebug/Telemetry.cs" Line="86" Column="23" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Exec" expanded="True" />
+          <Node name="GroundStation_v6" expanded="True">
+            <Node name="Input" expanded="True">
+              <Node name="FileDebug" expanded="True" />
+            </Node>
+            <Node name="Messages" expanded="True">
+              <Node name="Fields" expanded="True" />
+            </Node>
+            <Node name="Navigation" expanded="True">
+              <Node name="Heading.cs" selected="True" />
+            </Node>
+            <Node name="Output" expanded="True" />
+            <Node name="Point" expanded="True" />
+            <Node name="Processing" expanded="True" />
+          </Node>
+          <Node name="Visual" expanded="True">
+            <Node name="UserInterface" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True">
+          <Node name="GroundStation_v6" expanded="True">
+            <Node name="GroundStation" expanded="True">
+              <Node name="GroundStation.NavManager" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>val</Value>
+          <Value>valTrunc</Value>
+          <Value>time</Value>
+          <Value>count</Value>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/mpbatlle/Desktop/v12beta/GroundStation_v10/GroundStation_v6/Program.cs" line="133" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Navigation/Altitude.cs" line="54" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Navigation/ConsoleInput.cs" line="595" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Processing/PIDManager.cs" line="214" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Messages/GpsMessage.cs" line="188" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Messages/GpsMessage.cs" line="176" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode/v12beta/GroundStation_v10/GroundStation_v6/Messages/AdcMessage.cs" line="169" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode2/v12beta/GroundStation_v10/GroundStation_v6/Navigation/NavManager.cs" line="115" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode3/v12beta/GroundStation_v10/GroundStation_v6/Navigation/LatNav.cs" line="208" />
+      <Breakpoint file="/home/mpbatlle/Desktop/Allcode3/v12beta/GroundStation_v10/GroundStation_v6/Navigation/LatNav.cs" line="64" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
