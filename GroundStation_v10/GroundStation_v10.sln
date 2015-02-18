@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroundStation_v6", "GroundStation_v6\GroundStation_v6.csproj", "{2C33461E-AC4C-4064-BE34-1B2B0FB4A98B}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroundStation_v10", "GroundStation_v6\GroundStation_v10.csproj", "{2C33461E-AC4C-4064-BE34-1B2B0FB4A98B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exec", "Exec\Exec.csproj", "{99D854CD-7C8A-435D-8F56-5D818699E2B2}"
 EndProject
@@ -52,10 +54,10 @@ Global
 		{A3F21C4D-E29E-4B04-9BB0-29BA9C796025}.Release|x86.ActiveCfg = Release|Any CPU
 		{A3F21C4D-E29E-4B04-9BB0-29BA9C796025}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Exec\Exec.csproj
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Exec\Exec.csproj
 	EndGlobalSection
 EndGlobal

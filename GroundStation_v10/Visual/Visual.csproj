@@ -81,9 +81,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\GroundStation_v6\GroundStation_v6.csproj">
+    <ProjectReference Include="..\GroundStation_v6\GroundStation_v10.csproj">
       <Project>{2C33461E-AC4C-4064-BE34-1B2B0FB4A98B}</Project>
-      <Name>GroundStation_v6</Name>
+      <Name>GroundStation_v10</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
