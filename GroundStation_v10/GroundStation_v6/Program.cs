@@ -17,7 +17,7 @@ namespace GroundStation
 		private static readonly int b57600 = 57600;
 		private static ulong time = 0;
         private static Output op;
-        public static void Run()
+        public static void Run() //Se ejecuta desde Exec/Main
         {
             op = new Output();
 			ThreadStart thsTel = new ThreadStart (RunTelemetry);
@@ -52,14 +52,14 @@ namespace GroundStation
             int i = 0;
             while (true)
             {
-                p.CheckStartOfMessage();
+                p.CheckStartOfMessage();  //Busca el inicio del mensaje
 				//Console.WriteLine("Message Received");
                 byte[] header = p.ReadNBytes(1);
                 byte[] m;
                 switch (header[0])
                 {
                     case (byte)0: //IMU-Euler Angles
-                        m = p.ReadNBytes(13);
+                        m = p.ReadNBytes(13);  //13 bytes son de la IMU y tienen: time/roll/pitch/yaw/accX/accY/accZ
                         time += m[0];
                         imu.CreateMessage(time, m);
                         ga.Imu = imu;
@@ -74,7 +74,7 @@ namespace GroundStation
 						}
                         break;
                     case (byte)3: //Adc
-                        m = p.ReadNBytes(7);
+                        m = p.ReadNBytes(7);  //7 bytes son del ADC: time/barometro/termometro/pitot (ocupan 2 bytes todos menos time(1)) y calcula TAS y Altitud (ocupan 2 bytes)
                         time += m[0];
                         adc.CreateMessage(time, m);
                         ga.Adc = adc;
@@ -86,14 +86,14 @@ namespace GroundStation
 							//nav.UpdateHeadRef();
 						}
                         break;
-                    case (byte)4: //Pwm
+                    case (byte)4: //Pwm   //9 bytes: time/ch1/ch2/ch3/ch4 (valor de variables chX entre 1000 y 2000) ocupan 2 bytes
                         m = p.ReadNBytes(9);
                         time += m[0];
                         pwm.CreateMessage(time, m);
                         ga.Pwm = pwm;
                         db.Add(ga.Pwm);
                         break;
-                    case (byte)5: //Gps (deprecated)
+                    case (byte)5: //Gps (deprecated)  //13 bytes del GPS: time/lat/lon/gndspeed/trackangle (1/4/4/2/2) bytes  NO LO USA??
                         m = p.ReadNBytes(13);
                         time += m[0];
                         gps.CreateMessage(time, m);
@@ -102,14 +102,14 @@ namespace GroundStation
 						if(ga.IsReady())
 							nav.SetPosition(ga.Gps.pos);
                         break;
-					case (byte)6: //GpsDop
+                    case (byte)6: //GpsDop  NO LO USA??
 						m = p.ReadNBytes(p.ReadNBytes(1)[0]-4);
 						time += m[0];
                         dop.CreateMessage(time, m);
                         ga.Dop = dop;
                         db.Add(ga.Dop);
                         break;
-					case (byte)7: //GpsPos
+                    case (byte)7: //GpsPos  NO LO USA??
                         m = p.ReadNBytes(p.ReadNBytes(1)[0]-4);
                         time += m[0];
                         pos.CreateMessage(time, m);
@@ -128,9 +128,9 @@ namespace GroundStation
 						ga.Pos = pos;
                         db.Add(ga.Pos);
                         break;
-				case (byte)8:
-						byte count = p.ReadNBytes(1)[0];
-						m = p.ReadNBytes(count+1);
+				case (byte)8:  //GPS  ESTE ES EL QUE USA
+						byte count = p.ReadNBytes(1)[0]; //Lee el Lenghtmess(No incluye time)
+						m = p.ReadNBytes(count+1); //Lee (Lenghtmess+1) bytes
 						time += m[0];
 						char[] c = new char[6];
 						
@@ -161,7 +161,7 @@ namespace GroundStation
                 }
                 if (i == 10)
                 {
-                    op.Flush(db);
+                    op.Flush(db);  //Cada 10 ciclos guarda los datos en texto
                     i = 0;
                 }
                 i++;
@@ -189,7 +189,7 @@ namespace GroundStation
 			{
 				switch(nav.GetCurrentMode())
 				{
-				case NavManager.Mode.MANUAL:
+                    case NavManager.Mode.MANUAL:  //bypass, sale lo que entra multiplicando por el spanfactor y sumando el offset  throttle/roll/pitch/yaw  (1 byte cada uno)
 					b = si.ReadNBytes(4);
 					so.WriteNBytes(b);
 					Console.WriteLine("entrada: " + b[0] + " " + b[1] + " " + b[2] + " " + b[3]);
@@ -258,7 +258,7 @@ namespace GroundStation
 					op.WritePwm(time, b);
 					op.WritePwm(time, ans);
 					break;
-				case NavManager.Mode.CALIBRATION_YAW:
+                case NavManager.Mode.CALIBRATION_YAW:  //las 4 calibraciones mantienen el parametro a calibrar con un margen de 8 a 12 m/s (Throttle-speed) o +-2 deg (roll/pitch/yaw) con cambios en los controles de +-20%
 					swCal.WriteLine(time + " " + "yaw");
 					b = si.ReadNBytes(4);
 					Console.WriteLine("entrada:" + b[0] + " " + b[1] + " " + b[2] + " " + b[3]);
@@ -275,7 +275,7 @@ namespace GroundStation
 					op.WritePwm(time, ans);
 					so.WriteNBytes(ans);
 					break;
-				default:
+                default:  //DIRECTED Y AUTONOMOUS
 					b = si.ReadNBytes(4);
 					//Console.WriteLine("entrada:" + b[0] + " " + b[1] + " " + b[2] + " " + b[3]);
 					pid.SetCh(1, b[0]);
@@ -317,14 +317,14 @@ namespace GroundStation
 				ans = (byte)(((meanVal + calValueThrottle)-offset)/span);
 				stateThrottle = true;
 			}
-			else if(!stateThrottle)
+			else if(!stateThrottle)  //entra aqui despues de pasar por los >12¿¿
 			{
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.THROTTLE);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.THROTTLE);
 				int offset = pid.GetOffsetValue(PIDManager.Ctrl.THROTTLE);
 				ans = (byte)(((meanVal - calValueThrottle)-offset)/span);
 			}
-			else
+            else  //lo mismo que el de <8 por si 8<tas<12??
 			{
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.THROTTLE);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.THROTTLE);

@@ -38,7 +38,7 @@ namespace GroundStation
         public double altitude;
 		
 		/// <summary>
-		/// Constant a0. Standard speed of sound at sea level. [m/s]
+		/// Constant a0. Standard speed of sound at sea level. [m/s]  Esta en kt no en m/s
 		/// </summary>
         private const double a0 = 661.4788;
 		
@@ -228,8 +228,8 @@ namespace GroundStation
             b = 5 * b / 65536.0;
             t = 5 * t / 65536.0;
             p = 5 * p / 65536.0; 
-            this.barometer.V = (b / 5.1 + 0.095) / 0.009 * 1000.0;//45.9*b+10555
-            this.thermometer.V = t / 0.01 + 273.0;//
+            this.barometer.V = (b / 5.1 + 0.095) / 0.009 * 1000.0;//45.9*b+10555  
+            this.thermometer.V = t / 0.01 + 273.0;// Pasa a Kelvin de Celsius t*100
             this.pitot.V = (p / 5.0 - 0.2) / 0.2 * 1000.0;//1000*p+1000
 			
         }
