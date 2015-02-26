@@ -184,7 +184,7 @@ namespace GroundStation
 				lon = words[6] == "E" ? lon : -lon;
 				this.longitude.V = lon;
 				
-				this.gndSpeed.V = double.Parse(words[7]) * 1852.0/3600.0;
+				this.gndSpeed.V = double.Parse(words[7]) * 1852.0/3600.0; //kt a m/s
 				
 				double track = double.Parse(words[8]);
 				if(track > 180.0)

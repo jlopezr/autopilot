@@ -17,8 +17,6 @@ namespace XPlane
             parser.Start();
 
             //connection.SendPacket(XplanePacketGenerator.JoystickPacket(0, 0, 0, 0));
-
-            //Console.ReadKey();
         }
             
     }

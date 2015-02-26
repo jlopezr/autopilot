@@ -170,12 +170,12 @@ namespace GroundStation
         {
             double b, t, p;
 			this.time = time;
-            Array.Reverse(bArray, 1, 2);
+            Array.Reverse(bArray, 1, 4);
             b = BitConverter.ToUInt16(bArray, 1);
-            Array.Reverse(bArray, 3, 2);
-            t = BitConverter.ToUInt16(bArray, 3);
-            Array.Reverse(bArray, 5, 2);
-            p = BitConverter.ToUInt16(bArray, 5);
+            Array.Reverse(bArray, 5, 4);
+            t = BitConverter.ToUInt16(bArray, 5);
+            Array.Reverse(bArray, 9, 4);
+            p = BitConverter.ToUInt16(bArray, 9);
             this.ConvertData(b, t, p);
             this.CalculateExtras();
 			
@@ -225,13 +225,17 @@ namespace GroundStation
 		/// </param>
         private void ConvertData(double b, double t, double p)
         {
-            b = 5 * b / 65536.0;
-            t = 5 * t / 65536.0;
-            p = 5 * p / 65536.0; 
+            /*b = 5 * b / 65536.0; //Pasa a tension resolucion=7.629394531*10-5--->3.50189209*10-3 Pa--->2.8848*10-4 metros aprox 0.3mm -->10^-3 ft el rango son 20m
+            t = 5 * t / 65536.0; //Pasa a tension --->7.629*10-3 ºC
+            p = 5 * p / 65536.0; //Pasa a tension
             this.barometer.V = (b / 5.1 + 0.095) / 0.009 * 1000.0;//45.9*b+10555  
             this.thermometer.V = t / 0.01 + 273.0;// Pasa a Kelvin de Celsius t*100
-            this.pitot.V = (p / 5.0 - 0.2) / 0.2 * 1000.0;//1000*p+1000
-			
+            this.pitot.V = (p / 5.0 - 0.2) / 0.2 * 1000.0;//1000*p+1000*/
+
+            //Los paso como float asi que no hace falta tratarlos
+            this.barometer.V = b;  
+            this.thermometer.V = t;
+            this.pitot.V = p;
         }
 		
 		/// <summary>
@@ -240,7 +244,7 @@ namespace GroundStation
         private void CalculateExtras()
         {
             //tas[kt] = a0[kt] * sqrt(5*((qc[Hg]/P[Hg]+1)^2/7 - 1)*T[K]/T0[K]
-            this.tas = a0 * Math.Sqrt(5 * (Math.Pow(this.pitot.V / this.barometer.V + 1, 2 / 7.0) - 1) * this.thermometer.V / T0) - 29; // - 29::Offset degut a error en la tensio.
+            this.tas = a0 * Math.Sqrt(5 * (Math.Pow(this.pitot.V / this.barometer.V + 1, 2 / 7.0) - 1) * this.thermometer.V / T0) /*- 29*/; // - 29::Offset degut a error en la tensio.
             //Pz = P0*((T0+lambda*z)/T0)^(-g/(R*lambda))
             //z = T0*((P0/Pz)^(R*lambda/g)-1)/lambda
             this.altitude = T0 * (Math.Pow((P0 / this.barometer.V), R * lambda / g) - 1) / lambda;

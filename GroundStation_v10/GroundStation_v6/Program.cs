@@ -150,7 +150,7 @@ namespace GroundStation
 								nav.SetPosition(ga.Pos.pos);
 							}
 						}
-						else if(h == "$GPGSA")
+						else if(h == "$GPGSA") //No funciona?
 						{
 	                        dop.CreateMessage(time, m);
 	                        ga.Dop = dop;
