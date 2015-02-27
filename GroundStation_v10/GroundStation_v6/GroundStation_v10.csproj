@@ -84,8 +84,11 @@
     <Compile Include="Input\FileDebug\Telemetry.cs" />
     <Compile Include="Messages\GpsPosMessage.cs" />
     <Compile Include="Messages\GpsDopMessage.cs" />
+    <Compile Include="XPlane\PipeStream.cs" />
+    <Compile Include="XPlane\Read.cs" />
     <Compile Include="XPlane\Telemetrysim.cs" />
     <Compile Include="XPlane\PacketGenerator.cs" />
+    <Compile Include="XPlane\Write.cs" />
     <Compile Include="XPlane\XplaneConnection.cs" />
     <Compile Include="XPlane\XplanePacketsId.cs" />
     <Compile Include="XPlane\XplaneParser.cs" />

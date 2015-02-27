@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 
 namespace XPlane
@@ -26,6 +27,8 @@ namespace XPlane
         //private byte[] PWM;
         private byte[] GPS;
 
+
+        int tiempo1 = 0;
         public PipeStream mPipeStream; // the shared stream
         private byte[] Pipebytes;
         private bool firstpak = true;
@@ -84,9 +87,10 @@ namespace XPlane
                         header[2] = 1;
                         header[3] = 0;
                         header[4] = 1;//time
-                        Angles[0] = (Angles[0]+180) * 10000;
+                        Angles[0] = (Angles[0] + 180) * 10000;
                         Angles[1] = (Angles[1]+180) * 10000;
                         Angles[2] = (Angles[2]+180) * 10000;
+                        //IMU = header.Concat(BitConverter.GetBytes(Angles[0])).ToArray();
                         IMU = header.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[0]))).ToArray(); //Comprobar si hay que sumar/restar 180 antes de *10000
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[1]))).ToArray();
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[2]))).ToArray();
@@ -181,22 +185,51 @@ namespace XPlane
                         Pipebytes = IMU.Concat(ADC).ToArray();
                         Pipebytes = Pipebytes.Concat(GPS).ToArray();
 
+
+                        //Para ver lo que envia por la pipe
+                        /*byte[] p1 = Pipebytes;
+                        byte[] heade = { p1[0], p1[1], p1[2], p1[3] };
+                        if (heade[3] == (byte)0)
+                        {
+                            int time = p1[4];
+                            tiempo1 += time;
+                            
+                            float roll = (float)((BitConverter.ToSingle(p1, 5) / 10000.0) - 180.0);
+                            
+                            float pitch = (float)(BitConverter.ToSingle(p1, 9) / 10000.0 - 180.0);
+                           
+                            float yaw = (float)(BitConverter.ToSingle(p1, 13) / 10000.0 - 180.0);
+                            
+
+                           //Console.WriteLine("Header:{0}{1}{2}{3} Time:{4} Pitch:{5} Roll:{6} Yaw:{7} ", heade[0], heade[1], heade[2], heade[3], tiempo1, roll, pitch, yaw);
+                        }*/
+                        
                         if (firstpak)
                         {
                             firstpak = false;
-                            //PipeStream Start
 
+
+                            //PipeStream Start
                             mPipeStream = new PipeStream();
                             Read Reader = new Read();
-                            Write Writer = new Write();
+                            //Write Writer = new Write();
                             // create some threads to read and write data using PipeStream
 
                             List<Thread> StreamThreads = new List<Thread>();
                             new Thread(() => Reader.ReaderThread(mPipeStream)).Start();
                             //Thread readThread = new Thread(ReaderThread);
-                            new Thread(() => Writer.WriterThread(mPipeStream, Pipebytes)).Start();
-                            foreach (Thread d in StreamThreads) d.Join();
+                            //new Thread(() => WriterThread(mPipeStream, Pipebytes)).Start();
+                            //new Thread(() => WriterThread(new Tuple<PipeStream, byte[]> (mPipeStream, Pipebytes))).Start();
+                            Thread writeThread = new Thread(WriterThread);
+                            writeThread.Start();
+                            //writeThread.Join();
+                            //foreach (Thread d in StreamThreads) d.Join();
+
                         }
+
+                       
+                       
+                        
                     }
                 }
                 
@@ -207,6 +240,22 @@ namespace XPlane
                 }	
 			}
 		}
+
+
+        public void WriterThread()//, object bytes)
+        {
+            
+            while (true)
+            {
+                byte[] bytes2 = (byte[])Pipebytes;
+                if (bytes2 != null)
+                {
+                    mPipeStream.Write(bytes2, 0, bytes2.Length);
+                }
+            }
+
+        }
+        
 
 		public void Stop()
 		{
@@ -219,7 +268,7 @@ namespace XPlane
 			float uavAccelerationZ = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4) * Math.PI / 180.0);
 			float uavAccelerationX = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4 + 4) * Math.PI / 180.0);
 			float uavAccelerationY = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4 + 4 + 4) * Math.PI / 180.0);
-			Console.WriteLine ("Accelerations:{0},{1},{2}", uavAccelerationX, uavAccelerationY, uavAccelerationZ);
+			//Console.WriteLine ("Accelerations:{0},{1},{2}", uavAccelerationX, uavAccelerationY, uavAccelerationZ);
 		}
 
 		private void UpdatePosition(byte[] data, int i)//
@@ -230,7 +279,7 @@ namespace XPlane
 			float Altitude = (float)(BitConverter.ToSingle (data, i + 4 + 4 + 4)); //in feet
             Position[0] = (float)Latitude;
             Position[1] = (float)Longitude;;
-			Console.WriteLine ("Position:{0},{1},{2}", Latitude, Longitude, Altitude);
+			//Console.WriteLine ("Position:{0},{1},{2}", Latitude, Longitude, Altitude);
 		}
 
 		public void UpdateActualThrottle(byte[] data, int i)
@@ -241,27 +290,27 @@ namespace XPlane
 		private void UpdateAngles(byte[] data, int i)//
 		{
             Angles = new float[3];
-			float Pitch = (float)(BitConverter.ToSingle(data, i + 4) );
-			float Roll = (float)(BitConverter.ToSingle(data, i + 4 + 4));
-			float Yaw = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4));
-            Angles[0] = Pitch;
-            Angles[1] = Roll;
-            Angles[2] = Yaw;
-			Console.WriteLine ("Angles:{0},{1},{2}", Pitch, Roll, Yaw);
+			double Pitch = (BitConverter.ToSingle(data, i + 4) );
+            double Roll = (BitConverter.ToSingle(data, i + 4 + 4));
+            double Yaw = (BitConverter.ToSingle(data, i + 4 + 4 + 4));
+            Angles[0] = (float)Pitch;
+            Angles[1] = (float)Roll;
+            Angles[2] = (float)Yaw;
+			//Console.WriteLine ("Angles:{0},{1},{2}", Pitch, Roll, Yaw);
 		}
 
         private void UpdateAnglesAoA(byte[] data, int i)//
         {
             float Hpath = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4));
             AoA = Hpath;
-            Console.WriteLine("Track:{0}", Hpath);
+            //Console.WriteLine("Track:{0}", Hpath);
         }
 
         private void UpdateSpeeds(byte[] data, int i)//
         {
             float GrndSpd = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4));
             Speeds = GrndSpd;
-            Console.WriteLine("Ground Speed:{0}", GrndSpd); //kt
+            //Console.WriteLine("Ground Speed:{0}", GrndSpd); //kt
         }
 
         private void UpdateAtmosphere(byte[] data, int i)//
@@ -273,13 +322,13 @@ namespace XPlane
             Atmosphere[0] = AMprs;
             Atmosphere[1] = AMtemp;
             Atmosphere[2] = Q;
-            Console.WriteLine("Pressures and temperature:{0},{1},{2}", AMprs, AMtemp, Q);
+            //Console.WriteLine("Pressures and temperature:{0},{1},{2}", AMprs, AMtemp, Q);
         }
 
         private void UpdateTimes(byte[] data, int i)//
         {
             ZuluTime = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4 + 4 + 4));
-            Console.WriteLine("Local Time:{0}", ZuluTime);
+            //Console.WriteLine("Local Time:{0}", ZuluTime);
         }
 	}
 }
