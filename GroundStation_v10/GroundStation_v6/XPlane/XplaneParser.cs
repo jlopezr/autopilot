@@ -28,7 +28,7 @@ namespace XPlane
 
         public PipeStream mPipeStream; // the shared stream
         private byte[] Pipebytes;
-        private bool firstpak = true;
+        //private bool firstpak = true;
 
 		public XplaneParser (XplaneConnection connection)
 		{
@@ -86,7 +86,7 @@ namespace XPlane
                         header[4] = 1;//time
                         Angles[0] = (Angles[0]+180) * 10000;
                         Angles[1] = (Angles[1]+180) * 10000;
-                        Angles[2] = (Angles[2]+180) * 10000;
+                        Angles[2] = (Angles[2]) * 10000; //No suma 180. El programa quiere heading entre +-180 y le resta 180
                         IMU = header.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[0]))).ToArray(); //Comprobar si hay que sumar/restar 180 antes de *10000
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[1]))).ToArray();
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[2]))).ToArray();
@@ -97,9 +97,9 @@ namespace XPlane
                         header[2] = 1;
                         header[3] = 3;
                         header[4] = 1;//time
-                        Atmosphere[0] = (float)Atmosphere[0];
-                        Atmosphere[1] = (float)Atmosphere[1];
-                        Atmosphere[2] = (float)Atmosphere[2];
+                        Atmosphere[0] = (float)(Atmosphere[0] / 0.000295301 * 1000);
+                        Atmosphere[1] = (float)((Atmosphere[1] + 273) * 1000);
+                        Atmosphere[2] = (float)(Atmosphere[2] * 47.88020833333 * 1000);
                         
                         /*ADC = header.Concat(BitConverter.GetBytes(Convert.ToInt16(Atmosphere[0]))).ToArray(); //Deben ocupar 2 bytes--> valores de -32768 a 32767
                         ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToInt16(Atmosphere[1]))).ToArray();
@@ -150,8 +150,10 @@ namespace XPlane
                         ZuluTimemin = (float)Math.Truncate(ZuluTimemin);
                         ZuluTime = (float)((Math.Truncate(ZuluTime) * 10000) + (ZuluTimemin * 100) + ZuluTimesec);
 
-                        string Positionlat = Convert.ToString(Position[0]);
-                        string Positionlon = Convert.ToString(Position[1]);
+                        float latrmc = (float)((Math.Truncate(Position[0]) * 100) + (Math.Truncate((Position[0] - Math.Truncate(Position[0])) * 60 * 100) / 100));
+                        float lonrmc = (float)((Math.Truncate(Position[1]) * 100) + (Math.Truncate((Position[1] - Math.Truncate(Position[1])) * 60 * 100) / 100));
+                        string Positionlat = Convert.ToString(latrmc);
+                        string Positionlon = Convert.ToString(lonrmc);
                         string ZuluTstr = Convert.ToString(ZuluTime);
                         string SpeedsSTR = Convert.ToString(Speeds);
                         string trackstr = Convert.ToString(AoA);
@@ -166,7 +168,7 @@ namespace XPlane
                         GPSE[6] = lonlet;
                         GPSE[7] = SpeedsSTR;
                         GPSE[8] = trackstr; //faltan datos del mensaje GPRMC pero el programa no los necesita
-                        string GPSdata = string.Join(",", GPSE);
+                        string GPSdata = string.Join(".", GPSE);
                         
 
                         //Falta convertir a byte (pasando o no por char) contar los bytes, poner el length en headergps[4] y juntarlo todo
@@ -174,14 +176,15 @@ namespace XPlane
                         byte[] GPSbytes = Encoding.Unicode.GetBytes(GPSchar);
                         int Length = GPSbytes.Length;
                         headergps[4] = (byte)Length;
-                        GPS = headergps.Concat(GPSbytes).ToArray();
+                        //GPS = headergps.Concat(GPSbytes).ToArray();
 
 
                         //PipeStream
                         Pipebytes = IMU.Concat(ADC).ToArray();
-                        Pipebytes = Pipebytes.Concat(GPS).ToArray();
+                        Pipebytes = Pipebytes.Concat(headergps).ToArray();
+                        Pipebytes = Pipebytes.Concat(GPSbytes).ToArray();
 
-                        if (firstpak)
+                        /*if (firstpak)
                         {
                             firstpak = false;
                             //PipeStream Start
@@ -196,7 +199,7 @@ namespace XPlane
                             //Thread readThread = new Thread(ReaderThread);
                             new Thread(() => Writer.WriterThread(mPipeStream, Pipebytes)).Start();
                             foreach (Thread d in StreamThreads) d.Join();
-                        }
+                        }*/
                     }
                 }
                 
@@ -219,7 +222,7 @@ namespace XPlane
 			float uavAccelerationZ = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4) * Math.PI / 180.0);
 			float uavAccelerationX = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4 + 4) * Math.PI / 180.0);
 			float uavAccelerationY = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4 + 4 + 4) * Math.PI / 180.0);
-			Console.WriteLine ("Accelerations:{0},{1},{2}", uavAccelerationX, uavAccelerationY, uavAccelerationZ);
+			//Console.WriteLine ("Accelerations:{0},{1},{2}", uavAccelerationX, uavAccelerationY, uavAccelerationZ);
 		}
 
 		private void UpdatePosition(byte[] data, int i)//
@@ -230,7 +233,7 @@ namespace XPlane
 			float Altitude = (float)(BitConverter.ToSingle (data, i + 4 + 4 + 4)); //in feet
             Position[0] = (float)Latitude;
             Position[1] = (float)Longitude;;
-			Console.WriteLine ("Position:{0},{1},{2}", Latitude, Longitude, Altitude);
+			//Console.WriteLine ("Position:{0},{1},{2}", Latitude, Longitude, Altitude);
 		}
 
 		public void UpdateActualThrottle(byte[] data, int i)
@@ -246,22 +249,23 @@ namespace XPlane
 			float Yaw = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4));
             Angles[0] = Pitch;
             Angles[1] = Roll;
-            Angles[2] = Yaw;
-			Console.WriteLine ("Angles:{0},{1},{2}", Pitch, Roll, Yaw);
+            Angles[3] = Yaw;
+			//Console.WriteLine ("Angles:{0},{1},{2}", Pitch, Roll, Yaw);
 		}
 
         private void UpdateAnglesAoA(byte[] data, int i)//
         {
             float Hpath = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4));
+            Angles[2] = (float)(BitConverter.ToSingle(data, i + 4 + 4)); //Heading
             AoA = Hpath;
-            Console.WriteLine("Track:{0}", Hpath);
+            //Console.WriteLine("Track:{0}", Hpath);
         }
 
         private void UpdateSpeeds(byte[] data, int i)//
         {
             float GrndSpd = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4));
             Speeds = GrndSpd;
-            Console.WriteLine("Ground Speed:{0}", GrndSpd); //kt
+            //Console.WriteLine("Ground Speed:{0}", GrndSpd); //kt
         }
 
         private void UpdateAtmosphere(byte[] data, int i)//
@@ -273,13 +277,40 @@ namespace XPlane
             Atmosphere[0] = AMprs;
             Atmosphere[1] = AMtemp;
             Atmosphere[2] = Q;
-            Console.WriteLine("Pressures and temperature:{0},{1},{2}", AMprs, AMtemp, Q);
+            //Console.WriteLine("Pressures and temperature:{0},{1},{2}", AMprs, AMtemp, Q);
         }
 
         private void UpdateTimes(byte[] data, int i)//
         {
             ZuluTime = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4 + 4 + 4 + 4));
-            Console.WriteLine("Local Time:{0}", ZuluTime);
+            //Console.WriteLine("Local Time:{0}", ZuluTime);
+        }
+
+        public byte[] givemebytes(byte[] lastb)
+        {
+            bool tof = true;
+            byte[] sendbytes = Pipebytes;
+            while (tof)
+            {
+                sendbytes = Pipebytes;
+                if (sendbytes != null)
+                {
+                    if (sendbytes.Length > 47)
+                    {
+                        if (lastb == sendbytes)
+                        {
+                            tof = true;
+                        }
+                        else
+                        {
+                            tof = false;
+                        }
+                    }
+                }
+            }
+
+
+            return sendbytes;
         }
 	}
 }

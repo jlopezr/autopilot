@@ -335,5 +335,41 @@ namespace XPlane
 		}
 
 		#endregion
+
+        #region New methods and propierties for AP
+
+        public byte[] ReadNBytes(int n)
+        {
+            byte[] buffer = new byte[n];
+            int r = this.Read(buffer, 0, n);
+            return buffer;
+        }
+
+        public void CheckStartOfMessage()
+        {
+            bool ok = false;
+            while (true)
+            {
+                byte[] b = this.ReadNBytes(1);
+                if (b[0] != (byte)1)
+                {
+                    if (!ok)
+                    {
+                        Console.WriteLine("Warning! Not Synchronized!");
+                        ok = true;
+                    }
+                    continue;
+                }
+
+                b = this.ReadNBytes(1);
+                if (b[0] != (byte)1)
+                    continue;
+                b = this.ReadNBytes(1);
+                if (b[0] != (byte)1)
+                    continue;
+                break;
+            }
+        }
+        #endregion
 	}
 }

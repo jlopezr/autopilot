@@ -4,6 +4,7 @@ using System.Text;
 using GroundStation;
 using System.IO;
 using System.Threading;
+using XPlane;
 
 namespace GroundStation
 {
@@ -12,8 +13,8 @@ namespace GroundStation
 		private static readonly string path = "/dev/";
 		private static readonly string pwmIn = "ttyUSB1";
 		private static readonly string pwmOut = "ttyUSB2";
-		private static readonly string telIn = "ttyUSB0";
-		private static readonly int b19200 = 19200;
+		/*private static readonly string telIn = "ttyUSB0";
+		private static readonly int b19200 = 19200;*/
 		private static readonly int b57600 = 57600;
 		private static ulong time = 0;
         private static Output op;
@@ -45,10 +46,22 @@ namespace GroundStation
 			GpsPosMessage pos = new GpsPosMessage();
 			nav.Initialize();
             
-            Input p;
+            /*Input p;
 			//p = new SerialInput(path + telIn, b19200);
-			p = new LogInput();
-			
+			p = new LogInput();*/
+
+            XplanePacketsId.Load(XplaneVersion.Xplane10);
+            XplaneConnection connection = new XplaneConnection();
+            XplaneParser parser = new XplaneParser(connection);
+
+            connection.OpenConnections();
+            parser.Start();
+            PipeStream p = new PipeStream();
+
+            Writer w = new Writer();
+            w.output = p;
+            w.Start(parser);
+
             int i = 0;
             while (true)
             {
@@ -159,6 +172,26 @@ namespace GroundStation
 						break;
 					
                 }
+
+                //Enviamos controles a XPlane
+                byte[] pidctrl = new byte[4];
+                pidctrl[0] = pid.GetCh(1);
+                pidctrl[1] = pid.GetCh(2);
+                pidctrl[2] = pid.GetCh(3);
+                pidctrl[3] = pid.GetCh(4);
+                float joyposX = ((float)(pidctrl[2] * 8) - 1000) / 1000;
+                float joyposY = ((float)(pidctrl[1] * 8) - 1000) / 1000;
+                Console.WriteLine("JX:{0}", joyposX);
+                Console.WriteLine("JY:{0}", joyposY);
+                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, 0, joyposY);
+                connection.SendPacket(ctlmess);
+
+                /*Console.WriteLine("control message");
+                Console.WriteLine(Convert.ToDouble(pidctrl[0]));
+                Console.WriteLine(Convert.ToDouble(pidctrl[1]));
+                Console.WriteLine(Convert.ToDouble(pidctrl[2]));
+                Console.WriteLine(Convert.ToDouble(pidctrl[3]));//*/
+
                 if (i == 10)
                 {
                     op.Flush(db);  //Cada 10 ciclos guarda los datos en texto
@@ -473,5 +506,37 @@ namespace GroundStation
 			}
 			return ans;
 		}
+
+        class Writer
+        {
+            public Stream output;
+            public byte[] Pipeb;
+            XplaneParser parserb;
+            private byte[] prevb;
+
+            public void Start(object parserb1)
+            {
+                parserb = (XplaneParser)parserb1;
+                Thread th = new Thread(new ThreadStart(Run));
+                th.Start();
+            }
+
+
+            public void Run()
+            {
+                //byte b = 0;
+                while (true)
+                {
+                    Pipeb = parserb.givemebytes(prevb);
+                    prevb = Pipeb;
+                    byte[] bytes2 = (byte[])Pipeb;
+                    if (bytes2 != null)
+                    {
+                        output.Write(bytes2, 0, bytes2.Length);
+                    }
+                }
+
+            }
+        }
 	}
 }

@@ -166,7 +166,7 @@ namespace GroundStation
 				}
 				string m = new string(c);
 				//Console.WriteLine("GPS POS: " + m);
-				string[] words = m.Split(',');
+				string[] words = m.Split('.'); //Partimos por puntos para no separar decimales
 				
 				double lat = double.Parse(words[3]);
 				lat /= 100.0;
