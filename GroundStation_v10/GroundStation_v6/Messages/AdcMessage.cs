@@ -170,21 +170,21 @@ namespace GroundStation
         {
             double b, t, p;
 			this.time = time;
-            Array.Reverse(bArray, 1, 4);
-            b = BitConverter.ToUInt16(bArray, 1);
-            Array.Reverse(bArray, 5, 4);
-            t = BitConverter.ToUInt16(bArray, 5);
-            Array.Reverse(bArray, 9, 4);
-            p = BitConverter.ToUInt16(bArray, 9);
+            //Array.Reverse(bArray, 1, 4);
+            b = BitConverter.ToUInt32(bArray, 1);
+            //Array.Reverse(bArray, 5, 4);
+            t = BitConverter.ToUInt32(bArray, 5);
+            //Array.Reverse(bArray, 9, 4);
+            p = BitConverter.ToUInt32(bArray, 9);
             this.ConvertData(b, t, p);
             this.CalculateExtras();
 			
-			//Console.WriteLine("Time: " + this.time);
+			/*//Console.WriteLine("Time: " + this.time);
 			//Console.WriteLine("Bar: " + this.barometer.V);
 			//Console.WriteLine("Temp: " + this.thermometer.V);
 			//Console.WriteLine("Pitot: " + this.pitot.V);
 			Console.WriteLine("Alt: " + this.altitude);
-			//Console.WriteLine("TAS: " + this.tas);
+			//Console.WriteLine("TAS: " + this.tas);*/
         }
 		
 		/// <summary>

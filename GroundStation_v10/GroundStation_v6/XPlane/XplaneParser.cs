@@ -243,7 +243,7 @@ namespace XPlane
 
 		private void UpdateAngles(byte[] data, int i)//
 		{
-            Angles = new float[3];
+            Angles = new float[4];
 			float Pitch = (float)(BitConverter.ToSingle(data, i + 4) );
 			float Roll = (float)(BitConverter.ToSingle(data, i + 4 + 4));
 			float Yaw = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4));

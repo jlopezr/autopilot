@@ -1,5 +1,7 @@
 using System;
 
+using System.Text;
+
 namespace GroundStation
 {
 	public class GpsPosMessage : Message
@@ -158,13 +160,14 @@ namespace GroundStation
         {
 			try{
 				this.time = time;
-				char[] c = new char[b.Length-1];
-				
-				for(int i = 1; i < b.Length; i++)
-				{
-					c[i-1] = (char)b[i];
-				}
-				string m = new string(c);
+                byte[] c = new byte[b.Length - 1];
+
+                for (int i = 1; i < b.Length; i++)
+                {
+                    c[i - 1] = b[i];
+                }
+                char[] strgps = Encoding.Unicode.GetChars(c);
+                string m = new string(strgps);
 				//Console.WriteLine("GPS POS: " + m);
 				string[] words = m.Split('.'); //Partimos por puntos para no separar decimales
 				

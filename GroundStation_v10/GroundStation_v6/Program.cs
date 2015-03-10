@@ -87,7 +87,7 @@ namespace GroundStation
 						}
                         break;
                     case (byte)3: //Adc
-                        m = p.ReadNBytes(7);  //7 bytes son del ADC: time/barometro/termometro/pitot (ocupan 2 bytes todos menos time(1)) y calcula TAS y Altitud (ocupan 2 bytes)
+                        m = p.ReadNBytes(13);  //7 (13)bytes son del ADC: time/barometro/termometro/pitot (ocupan 2 bytes todos menos time(1)) y calcula TAS y Altitud (ocupan 2 bytes)
                         time += m[0];
                         adc.CreateMessage(time, m);
                         ga.Adc = adc;
@@ -145,13 +145,14 @@ namespace GroundStation
 						byte count = p.ReadNBytes(1)[0]; //Lee el Lenghtmess(No incluye time)
 						m = p.ReadNBytes(count+1); //Lee (Lenghtmess+1) bytes
 						time += m[0];
-						char[] c = new char[6];
+                        byte[] c = new byte[12];
 						
-						for(int j = 1; j < 7; j++)
+						for(int j = 1; j < 13; j++)
 						{
-							c[j-1] = (char)m[j];
+							c[j-1] = m[j];
 						}
-						string h = new string(c);
+						char[] cr1 = Encoding.Unicode.GetChars(c);
+						string h = new string(cr1);
 						
 						if(h == "$GPRMC")
 						{
