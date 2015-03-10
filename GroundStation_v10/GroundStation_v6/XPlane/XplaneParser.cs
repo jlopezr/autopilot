@@ -86,10 +86,11 @@ namespace XPlane
                         header[4] = 1;//time
                         Angles[0] = (Angles[0]+180) * 10000;
                         Angles[1] = (Angles[1]+180) * 10000;
-                        Angles[2] = (Angles[2]) * 10000; //No suma 180. El programa quiere heading entre +-180 y le resta 180
-                        IMU = header.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[0]))).ToArray(); //Comprobar si hay que sumar/restar 180 antes de *10000
-                        IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[1]))).ToArray();
-                        IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToSingle(Angles[2]))).ToArray();
+                        //Angles[2] = (Angles[2] + 180) * 10000; //beta
+                        Angles[2] = (Angles[3]) * 10000; //hdg //No suma 180. El programa quiere heading entre +-180 y le resta 180
+                        IMU = header.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[1]))).ToArray(); //Comprobar si hay que sumar/restar 180 antes de *10000
+                        IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[0]))).ToArray();
+                        IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[2]))).ToArray();
 
                         //ADC
                         header[0] = 1;
@@ -105,9 +106,9 @@ namespace XPlane
                         ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToInt16(Atmosphere[1]))).ToArray();
                         ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToInt16(Atmosphere[2]))).ToArray();*/
 
-                        ADC = header.Concat(BitConverter.GetBytes(Convert.ToSingle(Atmosphere[0]))).ToArray();
-                        ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToSingle(Atmosphere[1]))).ToArray();
-                        ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToSingle(Atmosphere[2]))).ToArray();
+                        ADC = header.Concat(BitConverter.GetBytes(Convert.ToInt32(Atmosphere[0]))).ToArray();
+                        ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToInt32(Atmosphere[1]))).ToArray();
+                        ADC = ADC.Concat(BitConverter.GetBytes(Convert.ToInt32(Atmosphere[2]))).ToArray();
 
                         //PWM
                         /*header[0] = 1;
