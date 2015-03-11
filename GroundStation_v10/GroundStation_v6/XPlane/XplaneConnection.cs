@@ -34,10 +34,21 @@ namespace XPlane
 		{
 			if (!isConnectionOpened)
 			{
-				// Addressing
-				IPAddress ipAddress_server = IPAddress.Parse(this.ipAddress);
-				IPAddress ipAddress_client = IPAddress.Parse(this.ipAddress);
+                // Addressing
+                IPAddress ipAddress_server;
+                IPAddress ipAddress_client; 
 
+                if (ipAddress != "127.0.0.1")
+                {
+                    ipAddress_client = IPAddress.Any;
+                    ipAddress_server = IPAddress.Parse(this.ipAddress);
+                }
+                else
+                {
+                    ipAddress_server = IPAddress.Parse(this.ipAddress);
+                    ipAddress_client = IPAddress.Parse(this.ipAddress);
+                }
+				
 				this.clientSocket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram, ProtocolType.Udp);
 				this.clientSocket.ReceiveBufferSize = 5120;
 				this.clientSocket.EnableBroadcast = true;

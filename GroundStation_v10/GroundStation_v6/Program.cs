@@ -51,7 +51,10 @@ namespace GroundStation
 			p = new LogInput();*/
 
             XplanePacketsId.Load(XplaneVersion.Xplane10);
-            XplaneConnection connection = new XplaneConnection();
+            
+            //XplaneConnection connection = new XplaneConnection();            
+            XplaneConnection connection = new XplaneConnection("10.211.55.2");
+
             XplaneParser parser = new XplaneParser(connection);
 
             connection.OpenConnections();
@@ -184,14 +187,18 @@ namespace GroundStation
                 float joyposY = ((float)(pidctrl[1] * 8) - 1000) / 1000;
                 Console.WriteLine("JX:{0}", joyposX);
                 Console.WriteLine("JY:{0}", joyposY);
-                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, 0, joyposY);
+                //byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, 0, joyposY);
+
+                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, 0.0f, 0, 0.0f);
+                
+                
                 connection.SendPacket(ctlmess);
 
-                /*Console.WriteLine("control message");
-                Console.WriteLine(Convert.ToDouble(pidctrl[0]));
+                Console.WriteLine("control message");
+                //Console.WriteLine(Convert.ToDouble(pidctrl[0]));
                 Console.WriteLine(Convert.ToDouble(pidctrl[1]));
                 Console.WriteLine(Convert.ToDouble(pidctrl[2]));
-                Console.WriteLine(Convert.ToDouble(pidctrl[3]));//*/
+                //Console.WriteLine(Convert.ToDouble(pidctrl[3]));
 
                 if (i == 10)
                 {
