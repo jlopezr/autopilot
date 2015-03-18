@@ -4,14 +4,11 @@ namespace GroundStation
 {
 	public class YawPID : PID
 	{
-		public YawPID ()
-			: base()
-		{ }
-		
 		public YawPID (double ts, double kp, double ki, double kd, int offset, double spanFactor, int minVal, int maxVal, int meanVal, double refValue)
 			: base(ts, kp, ki, kd, offset, spanFactor, minVal, maxVal, meanVal, refValue)
-
-		{ }
+		{
+            this.Name = "Yaw";
+        }
 		
 		public override void SetValue(double input)
 		{

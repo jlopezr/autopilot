@@ -19,11 +19,13 @@ namespace GroundStation
 			INITIAL_VAL,
 			MEAN_VAL
 		}
-		
+
+        public String Name;
+
 		/// <summary>
-		/// Indicates whether this <see cref="GroundStation.PID"/> is active.
+		/// Indicates whether this PID <see cref="GroundStation.PID"/> is active.
 		/// </summary>
-		private bool act;
+		private bool active;
 		
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="GroundStation.PID"/> is active.
@@ -31,11 +33,11 @@ namespace GroundStation
 		/// <value>
 		/// <c>true</c> if active; otherwise, <c>false</c>.
 		/// </value>/
-		public bool Act
+		public bool Active 
 		{
 			get
 			{
-				return this.act;
+				return this.active;
 			}
 		}
 		
@@ -44,7 +46,11 @@ namespace GroundStation
 		/// </summary>
         private double ts;
 		
+        /// <summary>
+        /// Indicates that this PID has its parameters filled.
+        /// </summary>
 		private bool filled;
+
         private double kp;
 		public double Kp
 		{
@@ -102,17 +108,12 @@ namespace GroundStation
 				return this.meanVal;
 			}
 		}
-		
-		public PID()
-		{
-			this.act = false;
-			this.filled = false;
-			this.mutex = new object();
-		}
-		
+
+        public PID() { }
+
         public PID(double ts, double kp, double ki, double kd, int offset, double spanFactor, int minVal, int maxVal, int meanVal, double refValue)
         {
-			this.act = true;
+			this.active = true;
 			this.filled = true;
 			
 			this.mutex = new object();
@@ -141,6 +142,9 @@ namespace GroundStation
         {
 			lock(this.mutex)
 			{
+                if (Name == "Pitch") {
+                    Console.WriteLine("["+Name+ "] INPUT:" + input +" COMMAND: "+refValue + " ERROR: "+(input-refValue));
+                }
 				input = (input - this.refValue - this.initialVal);
 				this.RefreshPid(-input);
 			}
@@ -152,7 +156,7 @@ namespace GroundStation
             double diff = input - prev;
             this.prev = input;
 
-            double ans = this.kp*input + this.ki * ts * this.acc + this.kd * diff / this.ts;
+            double ans = this.kp*input + this.ki * this.ts * this.acc + this.kd * diff / this.ts;
 			
 			ans += this.meanVal;
 			ans = ans < this.minVal ? ans = this.minVal : ans;
@@ -163,7 +167,7 @@ namespace GroundStation
 		public byte GetValue()
 		{
 			//Console.WriteLine("ACT: " + act.ToString());
-			if(this.act)
+			if(this.active)
 			{
 				//Console.WriteLine("GetCurrVal: " + this.currValue);
 				byte ans;
@@ -199,7 +203,7 @@ namespace GroundStation
 		
 		public void Deactivate()
 		{
-			this.act = false;
+			this.active = false;
 		}
 		
 		public void Activate(double ts, double kp, double ki, double kd, int offset, double spanFactor, int minVal, int maxVal, int meanVal, double refValue)
@@ -213,7 +217,7 @@ namespace GroundStation
 			this.maxVal = maxVal;
 			this.meanVal = meanVal;
 			this.filled = true;
-			this.act = true;
+			this.active = true;
 			this.refValue = 0;
 			this.initialVal = refValue;
 			
@@ -333,7 +337,7 @@ namespace GroundStation
 			if(!this.filled)
 				return false;
 			
-			this.act = true;
+			this.active = true;
 			this.acc = 0;
 			this.prev = 0;
 			return true;
@@ -354,5 +358,14 @@ namespace GroundStation
 			return this.spanFactor;
 		}
 			
+    }
+
+    //TODO Ñapa Quitar esta clase
+    class EmptyPID : PID
+    {
+        public EmptyPID()
+        {
+            Name = "Empty PID";
+        }
     }
 }

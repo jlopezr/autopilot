@@ -7,8 +7,7 @@ namespace GroundStation
 		private NavManager nav;
 		private GlobalArea ga;
 		private PIDManager pid;
-		
-		
+				
 		public ConsoleInput(NavManager nav)
 		{
 			this.nav = nav;

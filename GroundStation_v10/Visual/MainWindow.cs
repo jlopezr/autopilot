@@ -498,22 +498,22 @@ public partial class MainWindow: Gtk.Window
 		else 
 			this.YawCurrKi.Text = "N/A";
 		
-		if(this.pid.isAct(PIDManager.Ctrl.THROTTLE))
+		if(this.pid.isActive(PIDManager.Ctrl.THROTTLE))
 			this.CurActThrottle.Text = "YES";
 		else
 		   this.CurActThrottle.Text = "NO";
 		
-		if(this.pid.isAct(PIDManager.Ctrl.ROLL))
+		if(this.pid.isActive(PIDManager.Ctrl.ROLL))
 			this.CuActRoll.Text = "YES";
 		else
 		   this.CuActRoll.Text = "NO";
 		
-		if(this.pid.isAct(PIDManager.Ctrl.PITCH))
+		if(this.pid.isActive(PIDManager.Ctrl.PITCH))
 			this.CurActPitch.Text = "YES";
 		else
 		   this.CurActPitch.Text = "NO";
 		
-		if(this.pid.isAct(PIDManager.Ctrl.YAW))
+		if(this.pid.isActive(PIDManager.Ctrl.YAW))
 			this.CurActYaw.Text = "YES";
 		else
 		   this.CurActYaw.Text = "NO";
@@ -535,57 +535,57 @@ public partial class MainWindow: Gtk.Window
 
 	protected void OnThrottleClicked (object sender, System.EventArgs e)
 	{
-		if(this.pid.isAct(PIDManager.Ctrl.THROTTLE))
+		if(this.pid.isActive(PIDManager.Ctrl.THROTTLE))
 		{
 			this.pid.Deactivate(PIDManager.Ctrl.THROTTLE);
-			this.CurActThrottle.Text = this.pid.isAct(PIDManager.Ctrl.THROTTLE).ToString();
+			this.CurActThrottle.Text = this.pid.isActive(PIDManager.Ctrl.THROTTLE).ToString();
 		}
 		else
 		{
 			this.pid.Activate(PIDManager.Ctrl.THROTTLE);
-			this.CurActThrottle.Text = this.pid.isAct(PIDManager.Ctrl.THROTTLE).ToString();
+			this.CurActThrottle.Text = this.pid.isActive(PIDManager.Ctrl.THROTTLE).ToString();
 		}
 	}
 	
 	protected void OnRollClicked (object sender, System.EventArgs e)
 	{
-		if(this.pid.isAct(PIDManager.Ctrl.ROLL))
+		if(this.pid.isActive(PIDManager.Ctrl.ROLL))
 		{
 			this.pid.Deactivate(PIDManager.Ctrl.ROLL);
-			this.CuActRoll.Text = this.pid.isAct(PIDManager.Ctrl.ROLL).ToString();
+			this.CuActRoll.Text = this.pid.isActive(PIDManager.Ctrl.ROLL).ToString();
 		}
 		else
 		{
 			this.pid.Activate(PIDManager.Ctrl.ROLL);
-			this.CuActRoll.Text = this.pid.isAct(PIDManager.Ctrl.ROLL).ToString();
+			this.CuActRoll.Text = this.pid.isActive(PIDManager.Ctrl.ROLL).ToString();
 		}
 	}
 
 	protected void OnActPitchClicked (object sender, System.EventArgs e)
 	{
-		if(this.pid.isAct(PIDManager.Ctrl.PITCH))
+		if(this.pid.isActive(PIDManager.Ctrl.PITCH))
 		{
 			this.pid.Deactivate(PIDManager.Ctrl.PITCH);
-			this.CurActPitch.Text = this.pid.isAct(PIDManager.Ctrl.PITCH).ToString();
+			this.CurActPitch.Text = this.pid.isActive(PIDManager.Ctrl.PITCH).ToString();
 		}
 		else
 		{
 			this.pid.Activate(PIDManager.Ctrl.PITCH);
-			this.CurActPitch.Text = this.pid.isAct(PIDManager.Ctrl.PITCH).ToString();
+			this.CurActPitch.Text = this.pid.isActive(PIDManager.Ctrl.PITCH).ToString();
 		}
 	}
 
 	protected void OnActYawClicked (object sender, System.EventArgs e)
 	{
-		if(this.pid.isAct(PIDManager.Ctrl.YAW))
+		if(this.pid.isActive(PIDManager.Ctrl.YAW))
 		{
 			this.pid.Deactivate(PIDManager.Ctrl.YAW);
-			this.CurActYaw.Text = this.pid.isAct(PIDManager.Ctrl.YAW).ToString();
+			this.CurActYaw.Text = this.pid.isActive(PIDManager.Ctrl.YAW).ToString();
 		}
 		else
 		{
 			this.pid.Activate(PIDManager.Ctrl.YAW);
-			this.CurActYaw.Text = this.pid.isAct(PIDManager.Ctrl.YAW).ToString();
+			this.CurActYaw.Text = this.pid.isActive(PIDManager.Ctrl.YAW).ToString();
 		}
 	}
 

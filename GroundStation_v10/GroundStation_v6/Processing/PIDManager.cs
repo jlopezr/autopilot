@@ -48,10 +48,12 @@ namespace GroundStation
 			{
 				this.pids = new PID[4];
 				this.chIn = new byte[4];
-				this.pids[0] = new ThrottlePID();
-				this.pids[1] = new RollPID();
-				this.pids[2] = new PitchPID();
-				this.pids[3] = new YawPID();
+                //TODO Estos PIDs deberian ser creados solo en un punto. Si en la conf no esta el throttle
+                //     pues claro luego peta porque no lo encuentra.
+                this.pids[0] = new EmptyPID();
+                this.pids[1] = new EmptyPID();
+                this.pids[2] = new EmptyPID();
+                this.pids[3] = new EmptyPID();
 			}
 			this.SetInfo();
 		}
@@ -464,7 +466,7 @@ namespace GroundStation
 			return true;
 		}
 		
-		public bool isAct(Ctrl ctrl)
+		public bool isActive(Ctrl ctrl)
 		{
 			bool ans = false;
 			lock(this.pidMutex)
@@ -473,19 +475,19 @@ namespace GroundStation
 				{
 				case Ctrl.THROTTLE:
 					if(this.throttlePid != null)
-						ans = this.throttlePid.Act;
+						ans = this.throttlePid.Active;
 					break;
 				case Ctrl.ROLL:
 					if(this.rollPid != null)
-						ans = this.rollPid.Act;
+						ans = this.rollPid.Active;
 					break;
 				case Ctrl.PITCH:
 					if(this.pitchPid != null)
-						ans = this.pitchPid.Act;
+						ans = this.pitchPid.Active;
 					break;
 				case Ctrl.YAW:
 					if(this.yawPid != null)
-						ans = this.yawPid.Act;
+						ans = this.yawPid.Active;
 					break;
 				}
 			}
