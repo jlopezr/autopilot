@@ -142,7 +142,7 @@ namespace GroundStation
 			lock(this.mutex)
 			{
 				input = (input - this.refValue - this.initialVal);
-				this.RefreshPid(input);
+				this.RefreshPid(-input);
 			}
         }
 		

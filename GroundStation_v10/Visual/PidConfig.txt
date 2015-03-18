@@ -10,7 +10,7 @@ adcTs 0.2
 #PI: 0.101 2.02
 #PID: negatius...no tenen sentit
 
-#throttle 10 0 0 1 500 6 500 2000 1100 20
+#throttle 0.101 2.02 0 1 500 6 500 2000 1100 20
 
 #Roll kp ki kd channel_number offset span min max mean initialReference
 
@@ -20,7 +20,7 @@ adcTs 0.2
 #PI: -49.9 -66.6
 #PID: -1.95 -0.248 -0.097
 
-roll 12 0 0 2 500 6 500 2000 1154 0
+roll 20 1 0 2 000 8 0 2000 1000 0
 
 #Pitch kp ki kd channel_number offset span min max mean initialReference
 #Planta assumida 0.0025/(z-1)
@@ -29,7 +29,7 @@ roll 12 0 0 2 500 6 500 2000 1154 0
 #PID: 7.81 0.991 0.388
 
 #pitch 199 266 0 3 500 2 500 2000 1025 0
-pitch 7.5 0 0 3 500 6 500 2000 1118 0
+pitch 20 1 0 3 000 8 0 2000 1000 0
 
 
 #Yaw kp ki kd channel_number offset span min max mean initialReference

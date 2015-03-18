@@ -15,7 +15,7 @@ namespace GroundStation
 		
 		public override void SetValue(double input)
 		{
-			base.SetValue(-input);
+			base.SetValue(input);
 		}
 	}
 }

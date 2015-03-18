@@ -184,7 +184,7 @@ namespace GroundStation
         public void SetChRoll(ImuEulerMessage eulerMessage)
         {
 			double roll = eulerMessage.roll.V; 
-			roll = -roll;
+			//roll = -roll;
 			lock(this.pidMutex)
 		    {
 				if(this.rollPid != null)

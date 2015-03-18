@@ -180,11 +180,13 @@ namespace GroundStation
                 pidctrl[1] = pid.GetCh(2);
                 pidctrl[2] = pid.GetCh(3);
                 pidctrl[3] = pid.GetCh(4);
-                float joyposX = ((float)(pidctrl[2] * 8) - 1000) / 1000;
-                float joyposY = ((float)(pidctrl[1] * 8) - 1000) / 1000;
-                Console.WriteLine("JX:{0}", joyposX);
-                Console.WriteLine("JY:{0}", joyposY);
-                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, 0, joyposY);
+                
+                float joyposX = ((float)(Convert.ToInt32(pidctrl[1]) * 8) - 1000) / 1000;
+                float joyposY = ((float)(Convert.ToInt32(pidctrl[2]) * 8) - 1000) / 1000;
+                //Console.WriteLine("JX:{0}", joyposX);
+                //Console.WriteLine("JY:{0}", joyposY);
+                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, -999, joyposY);
+                //byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, 0, 0, 0); //Centrar controles
                 connection.SendPacket(ctlmess);
 
                 /*Console.WriteLine("control message");
