@@ -120,12 +120,12 @@ namespace GroundStation
 		/// <summary>
 		/// Minimum expected dynamic pressure [Pa]
 		/// </summary>
-        private const int pitotMin = 80;
+        private const int pitotMin = 10;
 		
 		/// <summary>
 		/// Maximum expected dynamic pressure [Pa]
 		/// </summary>
-        private const int pitotMax = 600;
+        private const int pitotMax = 10000;
 		
 		/// <summary>
 		/// Initial previous dynamic pressure value [Pa]
@@ -140,7 +140,7 @@ namespace GroundStation
 		/// <summary>
 		/// Maximum expected dynamic pressure variation [Pa/sample].
 		/// </summary>
-        private const int pitotMaxVar = 300;
+        private const int pitotMaxVar = 600;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GroundStation.AdcMessage"/> class.
@@ -233,9 +233,9 @@ namespace GroundStation
             this.pitot.V = (p / 5.0 - 0.2) / 0.2 * 1000.0;//1000*p+1000*/
 
             //Los paso como float asi que no hace falta tratarlos
-            this.barometer.V = b;  
-            this.thermometer.V = t;
-            this.pitot.V = p;
+            this.barometer.V = b/1000;  
+            this.thermometer.V = t/1000;
+            this.pitot.V = p/1000;
         }
 		
 		/// <summary>

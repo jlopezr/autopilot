@@ -142,9 +142,9 @@ namespace GroundStation
         {
 			lock(this.mutex)
 			{
-                if (Name == "Pitch") {
-                    Console.WriteLine("["+Name+ "] INPUT:" + input +" COMMAND: "+refValue + " ERROR: "+(input-refValue));
-                }
+                //if (Name == "Pitch") {
+                //    Console.WriteLine("["+Name+ "] INPUT:" + input +" COMMAND: "+refValue + " ERROR: "+(input-refValue));
+                //}
 				input = (input - this.refValue - this.initialVal);
 				this.RefreshPid(-input);
 			}

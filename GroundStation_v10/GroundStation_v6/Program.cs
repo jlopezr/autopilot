@@ -192,10 +192,10 @@ namespace GroundStation
                 //byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, 0, 0, 0); //Centrar controles
                 connection.SendPacket(ctlmess);
 
-                Console.WriteLine("control message");
+                //Console.WriteLine("control message");
                 //Console.WriteLine(Convert.ToDouble(pidctrl[0]));
-                Console.WriteLine(Convert.ToDouble(pidctrl[1]));
-                Console.WriteLine(Convert.ToDouble(pidctrl[2]));
+                //Console.WriteLine(Convert.ToDouble(pidctrl[1]));
+                //Console.WriteLine(Convert.ToDouble(pidctrl[2]));
                 //Console.WriteLine(Convert.ToDouble(pidctrl[3]));
 
                 if (i == 10)
