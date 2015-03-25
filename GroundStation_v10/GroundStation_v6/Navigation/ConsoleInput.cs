@@ -19,7 +19,34 @@ namespace GroundStation
 		{
 			while(true)
 			{
-				Console.WriteLine("Set parameter and new value separated by a space");
+				
+				string line = Console.ReadLine();
+				if(line == string.Empty)
+					continue;
+				string[] words = line.Split(new char[]{' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+				if(words.Length > 2)
+				{
+					Console.WriteLine("Wrong format");
+					Console.WriteLine();
+					continue;
+				}
+				double val;
+				this.ExecuteQuery(words, out val);
+			}
+		}
+		public bool ExecuteQuery(string[] query, out double val)
+		{
+			if(query.Length == 1)
+				Console.WriteLine("Received Query:" + query[0]);
+			else if(query.Length > 1)
+				Console.WriteLine("Received Query:" + query[0] + " " + query[1]);
+			
+			bool ok = false;
+			val = double.NaN;
+			switch(query[0])
+			{
+                case "help":
+                    Console.WriteLine("Set parameter and new value separated by a space");
 				Console.WriteLine("dm - switch to directed mode");
 				Console.WriteLine("am - switch to autonomous mode");
 				Console.WriteLine("mm - switch to manual mode");
@@ -63,31 +90,7 @@ namespace GroundStation
 				Console.WriteLine("pmv - refresh pitch mean value");
 				Console.WriteLine("ymv - refresh yaw mean value");
 				Console.WriteLine("e.g. nh 90 ");
-				string line = Console.ReadLine();
-				if(line == string.Empty)
-					continue;
-				string[] words = line.Split(new char[]{' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
-				if(words.Length > 2)
-				{
-					Console.WriteLine("Wrong format");
-					Console.WriteLine();
-					continue;
-				}
-				double val;
-				this.ExecuteQuery(words, out val);
-			}
-		}
-		public bool ExecuteQuery(string[] query, out double val)
-		{
-			if(query.Length == 1)
-				Console.WriteLine("Received Query:" + query[0]);
-			else if(query.Length > 1)
-				Console.WriteLine("Received Query:" + query[0] + " " + query[1]);
-			
-			bool ok = false;
-			val = double.NaN;
-			switch(query[0])
-			{
+                break;
 			case "nh":
 				double h = -1;
 				try
