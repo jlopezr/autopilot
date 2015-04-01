@@ -203,7 +203,8 @@ namespace GroundStation
 			this.distDest = dist;
 			this.distDestSw.WriteLine(dist);
 			this.distDestSw.Flush();
-			if(dist < 20)
+            Console.WriteLine("Dist to WP {0}", dist);
+			if(dist < 200)
 			{
 				WgsPoint last = this.dest.Dequeue();
 				this.s = new Segment2D(last, this.dest.Peek());

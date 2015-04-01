@@ -5,7 +5,7 @@ namespace GroundStation
 	//La velocitat la tenim directament relacionada
 	//amb el throttle a través de la funció de
 	//transferència de la planta.
-	/*public class Speed : UpperLayer
+	public class Speed : UpperLayer
 	{
 		//Si la velocitat respecte el vent
 		//difereix en menys de 2 m/s considerem
@@ -14,10 +14,10 @@ namespace GroundStation
 		
 		//Velocitat seleccionada
 		private double selSpeed;
-		
-		
-		public Speed (double initialRef)
-			: base ()
+
+
+        public Speed(double initialRef, double ts, double kp, double ki, double kd)
+			: base(ts, kp, ki, kd)
 		{
 			this.selSpeed = initialRef;
 		}
@@ -33,6 +33,6 @@ namespace GroundStation
 				return;
 			this.pid.SetRef(PIDManager.Ctrl.THROTTLE, this.selSpeed);
 		}
-	}*/
+	}
 }
 

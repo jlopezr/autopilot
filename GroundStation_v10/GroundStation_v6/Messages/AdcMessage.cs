@@ -70,12 +70,12 @@ namespace GroundStation
 		/// <summary>
 		/// Minimum expected static pressure [Pa]
 		/// </summary>
-        private const int barMin = 90000;
+        private const int barMin = 1000;
 		
 		/// <summary>
 		/// Maximum expected static pressure [Pa]
 		/// </summary>
-        private const int barMax = 100000;
+        private const int barMax = 102000;
 		
 		/// <summary>
 		/// Initial static pressure previous value [Pa]

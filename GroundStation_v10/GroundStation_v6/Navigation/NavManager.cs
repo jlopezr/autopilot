@@ -64,7 +64,7 @@ namespace GroundStation
 			case Mode.AUTONOMOUS:
 				this.alt.activate();
 				this.head.activate();
-				//this.speed.activate();
+				this.speed.activate();
 				this.latNav.activate();
 				break;
 			case Mode.DIRECTED:
@@ -75,7 +75,7 @@ namespace GroundStation
 			case Mode.CALIBRATION_YAW:
 				this.alt.deactivate();
 				this.head.deactivate();
-				//this.speed.deactivate();
+				this.speed.deactivate();
 				break;
 			}
 		}
@@ -166,45 +166,45 @@ namespace GroundStation
 				switch(words[0])
 				{
 				case "gpsTs":
-					gpsTs = double.Parse(words[1]);
+					gpsTs = Convert.ToDouble(words[1]);
 					break;
 				case "adcTs":
-					adcTs = double.Parse(words[1]);
+                    adcTs = Convert.ToDouble(words[1]);
 					break;
 				case "altitude":
-					kp = double.Parse(words[1]);
-					ki = double.Parse(words[2]);
-					kd = double.Parse(words[3]);
-					initialRef = double.Parse(words[4]);
-					double maxPitch = double.Parse(words[5]);
-					double minPitch = double.Parse(words[6]);
+                    kp = Convert.ToDouble(words[1]);
+                    ki = Convert.ToDouble(words[2]);
+                    kd = Convert.ToDouble(words[3]);
+                    initialRef = Convert.ToDouble(words[4]);
+                    double maxPitch = Convert.ToDouble(words[5]);
+                    double minPitch = Convert.ToDouble(words[6]);
 					this.alt = new Altitude(initialRef, adcTs, kp, ki, kd, maxPitch, minPitch);
 					break;
 				case "heading":
-					kp = double.Parse(words[1]);
-					ki = double.Parse(words[2]);
-					kd = double.Parse(words[3]);
-					initialRef = double.Parse(words[4]);
-					double maxRoll = double.Parse(words[5]);
+                    kp = Convert.ToDouble(words[1]);
+                    ki = Convert.ToDouble(words[2]);
+                    kd = Convert.ToDouble(words[3]);
+                    initialRef = Convert.ToDouble(words[4]);
+                    double maxRoll = Convert.ToDouble(words[5]);
 					this.head = new Heading(initialRef, adcTs, kp, ki, kd, maxRoll);
 					break;
 				case "latNav":
-					kp = double.Parse(words[1]);
-					ki = double.Parse(words[2]);
-					kd = double.Parse(words[3]);
-					double lat = double.Parse(words[4]);
-					double lon = double.Parse(words[5]);
+                    kp = Convert.ToDouble(words[1]);
+                    ki = Convert.ToDouble(words[2]);
+                    kd = Convert.ToDouble(words[3]);
+					double lat = Convert.ToDouble(words[4]);
+                    double lon = Convert.ToDouble(words[5]);
 					orig = new WgsPoint(lat, lon, 0);
 					break;
 				case "FP":
 					int n = int.Parse(words[1]);
 					Queue<WgsPoint> fp = new Queue<WgsPoint>();
-					for(int i = 0; i < 4; i++)
+					for(int i = 0; i < n; i++)
 					{
 						line = sr.ReadLine();
 						words = line.Split(' ');
-						double la = double.Parse(words[0]);
-						double lo = double.Parse(words[1]);
+                        double la = Convert.ToDouble(words[0]);
+                        double lo = Convert.ToDouble(words[1]);
 						WgsPoint aux = new WgsPoint(la, lo, 0);
 						fp.Enqueue(aux);
 					}

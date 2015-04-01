@@ -84,10 +84,11 @@ namespace XPlane
                         header[2] = 1;
                         header[3] = 0;
                         header[4] = 1;//time
-                        Angles[0] = (Angles[0]+180) * 10000;
-                        Angles[1] = (Angles[1]+180) * 10000;
+                        Angles[0] = (Angles[0] + 180) * 10000;
+                        Angles[1] = (Angles[1] + 180) * 10000;
                         //Angles[2] = (Angles[2] + 180) * 10000; //beta
-                        Angles[2] = (Angles[3]) * 10000; //hdg //No suma 180. El programa quiere heading entre +-180 y le resta 180
+                        Angles[2] = Angles[3] * 10000; //hdg //No suma 180. El programa quiere heading entre +-180 y le resta 180
+
                         IMU = header.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[1]))).ToArray(); //Comprobar si hay que sumar/restar 180 antes de *10000
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[0]))).ToArray();
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[2]))).ToArray();

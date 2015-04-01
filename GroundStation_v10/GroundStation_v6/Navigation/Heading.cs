@@ -30,7 +30,9 @@ namespace GroundStation
 			if(!this.activated)
 				return;
 			double currHeading = this.ga.Imu.yaw.V;
-			double diffHeading = (double)((this.selHeading - currHeading)%180);
+			//double diffHeading = (double)((this.selHeading - currHeading)%180);
+            double diffHeading = (double)((this.selHeading - currHeading));
+            Console.WriteLine("Selected HDG: {1}  HDG diff: {0}  Actual HDG: {2}", diffHeading, selHeading, currHeading);
 			double vStall = this.ap.stallTas;
 			double currTas = this.ga.Adc.tas;
 			double currRoll = this.ga.Imu.roll.V;
@@ -53,7 +55,7 @@ namespace GroundStation
 				this.pid.SetRef(PIDManager.Ctrl.ROLL, ans);
 				this.pid.SetRef(PIDManager.Ctrl.YAW, this.selHeading);
 			}
-			ans = this.RefreshPid(-diffHeading);
+			ans = this.RefreshPid(diffHeading);
 			
 			ans = ans > this.maxRoll ? this.maxRoll : ans;
 			ans = ans < -this.maxRoll ? -this.maxRoll : ans;

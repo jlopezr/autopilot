@@ -109,7 +109,7 @@ namespace GroundStation
 					Console.WriteLine();
 					return false;
 				}
-				if(h <= -180 || h >=180)
+				if(h <= 0 || h >=360)
 				{
 					Console.WriteLine("Heading out of range. It must be range between 0 and 360 degrees [0, 360)");
 					Console.WriteLine();
@@ -135,9 +135,9 @@ namespace GroundStation
 					Console.WriteLine();
 					return false;
 				}
-				if (v < 0 || v > 25)
+				if (v < 0 || v > 120)
 				{
-					Console.WriteLine("Velocity out of range. It must be range between 0 and 25 m/s");
+					Console.WriteLine("Velocity out of range. It must be range between 0 and 120 knots");
 					Console.WriteLine();
 					return false;
 				}

@@ -73,6 +73,8 @@ namespace GroundStation
 			ans = ans < this.minPitch ? this.minPitch : ans;
 			
 			this.pid.SetRef(PIDManager.Ctrl.PITCH, ans);
+            //Console.WriteLine("Pitch: {0}", ans);
+            //Console.WriteLine("Alt: {0}", currAlt);
 		}
 	}
 }
