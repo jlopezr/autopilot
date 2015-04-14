@@ -186,7 +186,8 @@ namespace GroundStation
                 
                 float joyposX = ((float)(Convert.ToInt32(pidctrl[1]) * 8) - 1000) / 1000;
                 float joyposY = ((float)(Convert.ToInt32(pidctrl[2]) * 8) - 1000) / 1000;
-                float Throttle = (float)(Convert.ToInt32(pidctrl[0]) * 8 / 2000);
+                float Throttle = (float)((float)Convert.ToInt32(pidctrl[0]) * 8 / 2000);
+
                 joyposX = joyposX > 0.35 ? joyposX = 0.35f : joyposX;
                 joyposX = joyposX < -0.35 ? joyposX = -0.35f : joyposX;
                 joyposY = joyposY > 0.35 ? joyposY = 0.35f : joyposY;
@@ -196,7 +197,7 @@ namespace GroundStation
                 
                 //byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, 0, 0, 0); //Centrar controles
 
-                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, -999, joyposY);
+                byte[] ctlmess = XplanePacketGenerator.JoystickPacket(Throttle, joyposX, -999, joyposY);
                 connection.SendPacket(ctlmess);
 
                 //Console.WriteLine("control message");

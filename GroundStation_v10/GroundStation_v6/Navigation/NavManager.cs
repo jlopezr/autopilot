@@ -41,7 +41,7 @@ namespace GroundStation
 		{
 			this.pid = PIDManager.GetInstance();
 			this.ReadConfig();
-			if(this.isFirst == true)
+            if(this.isFirst == true)
 			{
 				this.isFirst = false;
 				this.ci = new ConsoleInput(this);
@@ -64,7 +64,7 @@ namespace GroundStation
 			case Mode.AUTONOMOUS:
 				this.alt.activate();
 				this.head.activate();
-				this.speed.activate();
+				//this.speed.activate();
 				this.latNav.activate();
 				break;
 			case Mode.DIRECTED:
@@ -75,7 +75,7 @@ namespace GroundStation
 			case Mode.CALIBRATION_YAW:
 				this.alt.deactivate();
 				this.head.deactivate();
-				this.speed.deactivate();
+				//this.speed.deactivate();
 				break;
 			}
 		}
@@ -99,8 +99,9 @@ namespace GroundStation
 		
 		public void SetSpeed(double speedRef)
 		{
-			if(this.speed != null && this.currMode == Mode.AUTONOMOUS)
-				this.speed.SetParam(speedRef);
+            if ((this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED))
+                //this.speed.SetParam(speedRef); //No se necesita un Upperlayer
+                this.pid.RefreshParam(PIDManager.Ctrl.THROTTLE, PID.Param.INITIAL_VAL, speedRef);
 		}
 		
 		public void SetPosition(WgsPoint pos)
@@ -123,8 +124,9 @@ namespace GroundStation
 		
 		public void UpdateSpeedRef()
 		{
-			if(this.alt != null && this.currMode == Mode.AUTONOMOUS)
-				this.speed.GetRef();
+            if (this.alt != null && this.currMode == Mode.AUTONOMOUS)
+                //this.speed.GetRef(); //No se necesita un Upperlayer
+                this.pid.GetCh(1);
 		}
 		
 		//TODO: No em queda clar com fer el throttle...

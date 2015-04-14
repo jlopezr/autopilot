@@ -186,7 +186,7 @@ namespace GroundStation
 			
 			Geodesy.geo_inverse_wgs_84(alt, lat1, lon1, lat2, lon2, out az1, out az2, out dist);
             //True heading -->magnetic heading correction
-            az1 -= 2;
+            az1 += 1.8;
 
             return az1;
         }

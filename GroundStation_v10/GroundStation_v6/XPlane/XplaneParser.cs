@@ -248,7 +248,7 @@ namespace XPlane
             Angles = new float[4];
 			float Pitch = (float)(BitConverter.ToSingle(data, i + 4) );
 			float Roll = (float)(BitConverter.ToSingle(data, i + 4 + 4));
-			float Yaw = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4));
+			float Yaw = (float)(BitConverter.ToSingle(data, i + 4 + 4 + 4 + 4));
             Angles[0] = Pitch;
             Angles[1] = Roll;
             Angles[3] = Yaw;

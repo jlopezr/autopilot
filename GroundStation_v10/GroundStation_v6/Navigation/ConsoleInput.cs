@@ -161,9 +161,9 @@ namespace GroundStation
 					Console.WriteLine();
 					return false;
 				}
-				if (a < 0 || a > 1000)
+				if (a < 0 || a > 10000)
 				{
-					Console.WriteLine("Altitude out of range. It must be range between 0 and 1000 m");
+					Console.WriteLine("Altitude out of range. It must be range between 0 and 10000 m");
 					Console.WriteLine();
 					return false;
 				}

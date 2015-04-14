@@ -163,6 +163,38 @@ namespace GroundStation
 			ans = ans > this.maxVal ? ans = this.maxVal : ans;
 			this.currValue = (byte)Math.Round((ans - this.offset)/this.spanFactor);
 		}
+
+        private double prevans = 0;
+        public void RefreshPidThrottle(double input) //Added for speed control
+		{
+            double error = input;
+			
+
+            if (error > 10) //Slower than selected speed->max throttle
+            {
+                this.currValue = (byte)(this.maxVal / this.spanFactor);
+            }
+            else if (error < -10) //Faster than selected speed->Idle
+            {
+                this.currValue = (byte)(this.minVal / this.spanFactor);
+            }
+            else
+            {
+                this.acc += input;
+                double diff = input - prev;
+                this.prev = input;
+
+                double ansdiff = this.kp * input + this.ki * this.ts * this.acc + this.kd * diff / this.ts;
+                double ans = this.prevans + ansdiff;
+                Console.WriteLine("Throttle:{0}", ans);
+                ans += this.meanVal;
+                ans = ans < this.minVal ? ans = this.minVal : ans;
+                ans = ans > this.maxVal ? ans = this.maxVal : ans;
+                Console.WriteLine("Throttlesend:{0}", ans);
+                this.prevans = ans;
+                this.currValue = (byte)Math.Round((ans - this.offset) / this.spanFactor);
+            }
+		}
 		
 		public byte GetValue()
 		{

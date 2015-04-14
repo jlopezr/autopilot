@@ -10,7 +10,7 @@ adcTs 0.2
 #PI: 0.101 2.02
 #PID: negatius...no tenen sentit
 
-throttle 0.101 2.02 0 1 0 8 0 2000 1000 75
+throttle 1 0 -0.5 1 0 8 0 2000 0000 85
 
 #Roll kp ki kd channel_number offset span min max mean initialReference
 
@@ -36,7 +36,8 @@ pitch 40 1 0 3 000 8 0 2000 1000 0
 #P:
 #PI:
 #PID:
-yaw 4 0 0 4 5500 6 500 2000 893 60
+#yaw 4 0 0 4 5500 6 500 2000 893 60
+yaw 4 0 0 4 00 8 000 2000 1000 00
 
 
 

@@ -32,6 +32,14 @@ namespace GroundStation
 			double currHeading = this.ga.Imu.yaw.V;
 			//double diffHeading = (double)((this.selHeading - currHeading)%180);
             double diffHeading = (double)((this.selHeading - currHeading));
+            if(diffHeading < -180)
+            {
+                diffHeading = diffHeading + 360;
+            }
+            else if (diffHeading > 180)
+            {
+                diffHeading = diffHeading - 360;
+            }
             Console.WriteLine("Selected HDG: {1}  HDG diff: {0}  Actual HDG: {2}", diffHeading, selHeading, currHeading);
 			double vStall = this.ap.stallTas;
 			double currTas = this.ga.Adc.tas;
