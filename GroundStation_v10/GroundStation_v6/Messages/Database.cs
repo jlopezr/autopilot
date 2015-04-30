@@ -12,7 +12,7 @@ namespace GroundStation
 		/// <summary>
 		/// The gps message list.
 		/// </summary>
-        public List<GpsMessage> gpsList;
+        
 		
 		/// <summary>
 		/// The adc message list.
@@ -27,22 +27,21 @@ namespace GroundStation
 		/// <summary>
 		/// The imu (raw) message list.
 		/// </summary>
-        public List<ImuRawMessage> imuRawList;
 		
 		/// <summary>
 		/// The pwm message list.
 		/// </summary>
         public List<PwmMessage> pwmList;
 		
-		public List<GpsDopMessage> dopList;
+		
 		public List<GpsPosMessage> posList;
 		
 		/// <summary>
 		/// The gps message
 		/// </summary>
-        private GpsMessage gps;
+        
 		
-		private GpsDopMessage dop;
+		
 		private GpsPosMessage pos;
 		
 		/// <summary>
@@ -55,10 +54,6 @@ namespace GroundStation
 		/// </summary>
         private ImuEulerMessage imuEuler;
 		
-		/// <summary>
-		/// The imu (raw) message
-		/// </summary>
-        private ImuRawMessage imuRaw;
 		
 		/// <summary>
 		/// The (pwm) message
@@ -89,18 +84,13 @@ namespace GroundStation
 		/// </summary>
         private Database()
         {
-            this.gpsList = new List<GpsMessage>();
+            
 			this.posList = new List<GpsPosMessage>();
-			this.dopList = new List<GpsDopMessage>();
             this.adcList = new List<AdcMessage>();
-            this.imuRawList = new List<ImuRawMessage>();
             this.imuEulerList = new List<ImuEulerMessage>();
             this.pwmList = new List<PwmMessage>();
-            this.gps = new GpsMessage();
-			this.dop = new GpsDopMessage();
 			this.pos = new GpsPosMessage();
             this.imuEuler = new ImuEulerMessage();
-            this.imuRaw = new ImuRawMessage();
             this.pwm = new PwmMessage();
             this.adc = new AdcMessage();
         }
@@ -116,20 +106,11 @@ namespace GroundStation
         {
             Type t = m.GetType();
             
-            if (t == gps.GetType())
-                this.gpsList.Add(m as GpsMessage);
-			
-			else if (t == pos.GetType())
+            if (t == pos.GetType())
 				this.posList.Add(m as GpsPosMessage);
-			
-			else if (t == dop.GetType())
-				this.dopList.Add(m as GpsDopMessage);
 
             else if (t == imuEuler.GetType())
                 this.imuEulerList.Add(m as ImuEulerMessage);
-
-            else if (t == imuRaw.GetType())
-                this.imuRawList.Add(m as ImuRawMessage);
 
             else if (t == adc.GetType())
                 this.adcList.Add(m as AdcMessage);
@@ -143,12 +124,9 @@ namespace GroundStation
 		/// </summary>
         public void Initialize()
         {
-            this.gpsList = new List<GpsMessage>();
 			this.posList = new List<GpsPosMessage>();
-			this.dopList = new List<GpsDopMessage>();
             this.adcList = new List<AdcMessage>();
             this.imuEulerList = new List<ImuEulerMessage>();
-            this.imuRawList = new List<ImuRawMessage>();
             this.pwmList = new List<PwmMessage>();
         }
     }

@@ -67,6 +67,83 @@ namespace GroundStation
 		        
         private void SetInfo()
         {
+            PidConfig config = new PidConfig(PidConfig.ACModel.RC); //Change A/C model here and in AircraftPerformance class
+            int ch, offset, minVal, maxVal, meanVal;
+            double spanFactor, imuTs = -1, adcTs = -1, kp, ki, kd, refValue;
+            imuTs = config.imuTs;
+            adcTs = config.adcTs;
+
+            //Roll
+            kp = config.rkp;
+            ki = config.rki;
+            kd = config.rkd;
+            ch = Convert.ToInt32(config.rCh);
+            offset = Convert.ToInt32(config.rOffset);
+            spanFactor = config.rSpan;
+            minVal = Convert.ToInt32(config.rMin);
+            maxVal = Convert.ToInt32(config.rMax);
+            meanVal = Convert.ToInt32(config.rMean);
+            refValue = config.rInitialRef;
+            lock (this.pidMutex)
+            {
+                this.rollPid = new RollPID(imuTs, kp, ki, kd, offset, spanFactor, minVal, maxVal, meanVal, refValue);
+                this.pids[ch - 1] = this.rollPid;
+            }
+
+            //Pitch
+            kp = config.pkp;
+            ki = config.pki;
+            kd = config.pkd;
+            ch = Convert.ToInt32(config.pCh);
+            offset = Convert.ToInt32(config.pOffset);
+            spanFactor = config.pSpan;
+            minVal = Convert.ToInt32(config.pMin);
+            maxVal = Convert.ToInt32(config.pMax);
+            meanVal = Convert.ToInt32(config.pMean);
+            refValue = config.pInitialRef;
+            lock (this.pidMutex)
+            {
+                this.pitchPid = new PitchPID(imuTs, kp, ki, kd, offset, spanFactor, minVal, maxVal, meanVal, refValue);
+                this.pids[ch - 1] = this.pitchPid;
+            }
+
+            //Yaw
+            kp = config.ykp;
+            ki = config.yki;
+            kd = config.ykd;
+            ch = Convert.ToInt32(config.yCh);
+            offset = Convert.ToInt32(config.yOffset);
+            spanFactor = config.ySpan;
+            minVal = Convert.ToInt32(config.yMin);
+            maxVal = Convert.ToInt32(config.yMax);
+            meanVal = Convert.ToInt32(config.yMean);
+            refValue = config.yInitialRef;
+            lock (this.pidMutex)
+            {
+                this.yawPid = new YawPID(imuTs, kp, ki, kd, offset, spanFactor, minVal, maxVal, meanVal, refValue);
+                this.pids[ch - 1] = this.yawPid;
+            }
+
+            //Throttle
+            kp = config.tkp;
+            ki = config.tki;
+            kd = config.tkd;
+            ch = Convert.ToInt32(config.tCh);
+            offset = Convert.ToInt32(config.tOffset);
+            spanFactor = config.tSpan;
+            minVal = Convert.ToInt32(config.tMin);
+            maxVal = Convert.ToInt32(config.tMax);
+            meanVal = Convert.ToInt32(config.tMean);
+            refValue = config.tInitialRef;
+            lock (this.pidMutex)
+            {
+                this.throttlePid = new ThrottlePID(adcTs, kp, ki, kd, offset, spanFactor, minVal, maxVal, meanVal, refValue);
+                this.pids[ch - 1] = this.throttlePid;
+            }
+        }
+
+        private void SetInfoText()
+        {
 			StreamReader sr = new StreamReader("PidConfig.txt");
 			string line = null;
 			int ch, offset, minVal, maxVal, meanVal;
@@ -185,7 +262,7 @@ namespace GroundStation
 
         public void SetChRoll(ImuEulerMessage eulerMessage)
         {
-			double roll = eulerMessage.roll.V; 
+			double roll = eulerMessage.roll; 
 			//roll = -roll;
 			lock(this.pidMutex)
 		    {
@@ -196,7 +273,7 @@ namespace GroundStation
   
 		public void SetChPitch(ImuEulerMessage eulerMessage)
         {
-         	double pitch = eulerMessage.pitch.V;   
+         	double pitch = eulerMessage.pitch;   
 			lock(this.pidMutex)
 		    {
 				if(this.pitchPid != null)
@@ -206,7 +283,7 @@ namespace GroundStation
 
         public void SetChYaw(ImuEulerMessage eulerMessage)
         {
-			double yaw = eulerMessage.yaw.V;
+			double yaw = eulerMessage.yaw;
 			lock(this.pidMutex)
 		    {
 				if(this.yawPid != null)

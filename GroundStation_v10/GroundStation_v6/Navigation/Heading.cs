@@ -29,7 +29,7 @@ namespace GroundStation
 		{
 			if(!this.activated)
 				return;
-			double currHeading = this.ga.Imu.yaw.V;
+			double currHeading = this.ga.Imu.yaw;
 			//double diffHeading = (double)((this.selHeading - currHeading)%180);
             double diffHeading = (double)((this.selHeading - currHeading));
             if(diffHeading < -180)
@@ -43,7 +43,7 @@ namespace GroundStation
             Console.WriteLine("Selected HDG: {1}  HDG diff: {0}  Actual HDG: {2}", diffHeading, selHeading, currHeading);
 			double vStall = this.ap.stallTas;
 			double currTas = this.ga.Adc.tas;
-			double currRoll = this.ga.Imu.roll.V;
+			double currRoll = this.ga.Imu.roll;
 			
 			if(diffHeading < 0)
 				this.cw = false;

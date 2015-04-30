@@ -40,7 +40,7 @@ namespace GroundStation
 			
 			double currTas = this.ga.Adc.tas;
 			double currAlt = this.ga.Adc.altitude;
-			double currPitch = this.ga.Imu.pitch.V;
+			double currPitch = this.ga.Imu.pitch;
 			
 			//Positive if climbing, otherwise negative 
 			double diffAlt = this.selAlt - currAlt;

@@ -24,7 +24,7 @@ namespace XPlane
         private byte[] IMU;
         private byte[] ADC;
         //private byte[] PWM;
-        private byte[] GPS;
+        
 
         public PipeStream mPipeStream; // the shared stream
         private byte[] Pipebytes;
@@ -178,7 +178,7 @@ namespace XPlane
                         byte[] GPSbytes = Encoding.Unicode.GetBytes(GPSchar);
                         int Length = GPSbytes.Length;
                         headergps[4] = (byte)Length;
-                        //GPS = headergps.Concat(GPSbytes).ToArray();
+                        
 
 
                         //PipeStream
@@ -186,22 +186,7 @@ namespace XPlane
                         Pipebytes = Pipebytes.Concat(headergps).ToArray();
                         Pipebytes = Pipebytes.Concat(GPSbytes).ToArray();
 
-                        /*if (firstpak)
-                        {
-                            firstpak = false;
-                            //PipeStream Start
-
-                            mPipeStream = new PipeStream();
-                            Read Reader = new Read();
-                            Write Writer = new Write();
-                            // create some threads to read and write data using PipeStream
-
-                            List<Thread> StreamThreads = new List<Thread>();
-                            new Thread(() => Reader.ReaderThread(mPipeStream)).Start();
-                            //Thread readThread = new Thread(ReaderThread);
-                            new Thread(() => Writer.WriterThread(mPipeStream, Pipebytes)).Start();
-                            foreach (Thread d in StreamThreads) d.Join();
-                        }*/
+                        
                     }
                 }
                 

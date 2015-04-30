@@ -282,16 +282,16 @@ namespace GroundStation
 				val = ga.Adc.tas;
 				break;
 			case "ih":
-				Console.WriteLine("Current yaw: " + ga.Imu.yaw.V);
-				val = ga.Imu.yaw.V;
+				Console.WriteLine("Current yaw: " + ga.Imu.yaw);
+				val = ga.Imu.yaw;
 				break;
 			case "ir":
-				Console.WriteLine("Current roll: " + ga.Imu.roll.V);
-				val = ga.Imu.roll.V;
+				Console.WriteLine("Current roll: " + ga.Imu.roll);
+				val = ga.Imu.roll;
 				break;
 			case "ip":
-				Console.WriteLine("Current pitch: " + ga.Imu.pitch.V);
-				val = ga.Imu.pitch.V;
+				Console.WriteLine("Current pitch: " + ga.Imu.pitch);
+				val = ga.Imu.pitch;
 				break;
 			case "mm":
 				this.nav.Switch(NavManager.Mode.MANUAL);

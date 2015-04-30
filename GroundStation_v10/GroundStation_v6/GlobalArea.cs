@@ -65,25 +65,7 @@ namespace GroundStation
                 this.pwm = value;
             }
         }
-        private GpsMessage gps = null;
-        public GpsMessage Gps
-        {
-            get
-            {
-                if (this.gps == null)
-                    return null;
-                GpsMessage ans;
-                lock (this.mutGps)
-                {
-                    ans = GpsMessage.DeepCopy(this.gps);
-                }
-                return ans;
-            }
-            set
-            {
-                this.gps = value;
-            }
-        }
+        
 		
 		private GpsPosMessage pos = null;
 		public GpsPosMessage Pos
@@ -106,26 +88,7 @@ namespace GroundStation
 			}
 		}
 		
-		private GpsDopMessage dop = null;
-		public GpsDopMessage Dop
-		{
-			get
-			{
-				if(this.dop == null)
-					return null;
-				GpsDopMessage ans;
-				lock (this.mutPos)
-				{
-					ans = this.dop.DeepCopy();
-				}
-				return ans;
-			}
-			
-			set
-			{
-				this.dop = value;
-			}
-		}
+		
 
         private static GlobalArea instance = null;
 

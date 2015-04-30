@@ -14,182 +14,18 @@ namespace GroundStation
 		/// <summary>
 		/// The roll field
 		/// </summary>
-        public Field2 roll;
+        public double roll;
 		
 		/// <summary>
 		/// The pitch field
 		/// </summary>
-        public Field2 pitch;
+        public double pitch;
 		
 		/// <summary>
 		/// The yaw field.
 		/// </summary>
-        public Field2 yaw;
+        public double yaw;
 		
-		/// <summary>
-		/// The x-axis acceleration
-		/// </summary>
-		//public Field2 accelX;
-		
-		/// <summary>
-		/// The y-axis acceleration
-		/// </summary>
-        //public Field2 accelY;
-		
-		/// <summary>
-		/// The z.axis acceleration
-		/// </summary>
-        //public Field2 accelZ;
-		
-		/// <summary>
-		/// Minimum expected roll [deg]
-		/// </summary>
-        private const int rollMin = -90;
-		
-		/// <summary>
-		/// Maximum expected roll [deg]
-		/// </summary>
-        private const int rollMax = 90;
-		
-		/// <summary>
-		/// Initial roll previous value [deg]
-		/// </summary>
-        private const int rollPrevValue = 0;
-		
-		/// <summary>
-		/// Initial roll previous value [deg]
-		/// </summary>
-        private const int rollPrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected roll variation [deg/sample]
-		/// </summary>
-        private const int rollMaxVar = 15;
-		
-		/// <summary>
-		/// Minimum expected pitch [deg]
-		/// </summary>
-        private const int pitchMin = -90;
-		
-		/// <summary>
-		/// Maximum expected pitch [deg]
-		/// </summary>
-        private const int pitchMax = 90;
-		
-		/// <summary>
-		/// Initial pitch previous value [deg]
-		/// </summary>
-        private const int pitchPrevValue = 0;
-		
-		/// <summary>
-		/// Initial pitch previous value [deg]
-		/// </summary>
-        private const int pitchPrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected pitch variation [deg/sample]
-		/// </summary>
-        private const int pitchMaxVar = 10;
-		
-		/// <summary>
-		/// Minimum expected yaw [deg]
-		/// </summary>
-        private const int yawMin = -180;
-		
-		/// <summary>
-		/// Maximum expected yaw [deg]
-		/// </summary>
-        private const int yawMax = 180;
-		
-		/// <summary>
-		/// Initial yaw previous value [deg]
-		/// </summary>
-        private const int yawPrevValue = -90;
-		
-		/// <summary>
-		/// Initial yaw previous value [deg]
-		/// </summary>
-        private const int yawPrevPrevValue = 90;
-		
-		/// <summary>
-		/// Maximum expected yaw variation [deg/sample]
-		/// </summary>
-        private const int yawMaxVar = 10;
-		
-		/// <summary>
-		/// Minimum expected x-axis acceleration [g]
-		/// </summary>
-        //private const int accelXMin = -2;
-		
-		/// <summary>
-		/// Maximum expected x-axis acceleration [g]
-		/// </summary>
-        //private const int accelXMax = 2;
-		
-		/// <summary>
-		/// Initial x-axis acceleration previous value [g]
-		/// </summary>
-        //private const int accelXPrevValue = 0;
-		
-		/// <summary>
-		/// Initial x-axis acceleration previous value [g]
-		/// </summary>
-        //private const int accelXPrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected x-axis acceleration variation [g/sample]
-		/// </summary>
-        //private const int accelXMaxVar = 1;
-		
-		/// <summary>
-		/// Minimum expected y-axis acceleration [g]
-		/// </summary>
-        //private const int accelYMin = -2;
-		
-		/// <summary>
-		/// Maximum expected y-axis acceleraiton [g]
-		/// </summary>
-        //private const int accelYMax = 2;
-		
-		/// <summary>
-		/// Initial y-axis acceleration previous value [g]
-		/// </summary>
-        //private const int accelYPrevValue = 0;
-		
-		/// <summary>
-		/// Initial y-axis acceleration previous value [g]
-		/// </summary>
-        //private const int accelYPrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected y-axis acceleration variation [g]
-		/// </summary>
-        //private const int accelYMaxVar = 1;
-		
-		/// <summary>
-		/// Minimum expected z-axis acceleration [g]
-		/// </summary>
-        //private const int accelZMin = -2;
-		
-		/// <summary>
-		/// Maximum expected z-axis acceleration [g]
-		/// </summary>
-        //private const int accelZMax = 2;
-		
-		/// <summary>
-		/// Initial z-axis acceleration previous value [g]
-		/// </summary>
-        //private const int accelZPrevValue = 0;
-		
-		/// <summary>
-		/// Initial z-axis acceleration previous value [g]
-		/// </summary>
-        //private const int accelZPrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected z-axis acceleration variation [g/sample] 
-		/// </summary>
-        //private const int accelZMaxVar = 1;
 		
 		
 		/// <summary>
@@ -203,14 +39,7 @@ namespace GroundStation
 		/// </param>
         public ImuEulerMessage()
         : base ()
-        {
-			this.roll = new Field2(rollMin, rollMax, rollPrevValue, rollMaxVar);
-            this.pitch = new Field2(pitchMin, pitchMax, pitchPrevValue, pitchMaxVar);
-            this.yaw = new Field2(yawMin, yawMax, yawPrevValue, yawMaxVar);
-            //this.accelX = new Field2(accelXMin, accelXMax, accelXPrevValue);
-            //this.accelY = new Field2(accelYMin, accelYMax, accelYPrevValue);
-            //this.accelZ = new Field2(accelZMin, accelZMax, accelZPrevValue);
-        }
+        { }
 		
 		/// <summary>
 		/// Creates the message.
@@ -223,11 +52,11 @@ namespace GroundStation
 			this.time = time;
 			//Console.WriteLine("Time: " + this.time);
             //Array.Reverse(b, 1, 4);
-            this.roll.V = BitConverter.ToUInt32(b, 1) / 10000.0 - 180.0;
+            this.roll = BitConverter.ToUInt32(b, 1) / 10000.0 - 180.0;
 			
             //Array.Reverse(b, 5, 4);
             double val = BitConverter.ToUInt32(b, 5) / 10000.0 - 180.0;
-			this.pitch.V = val;
+			this.pitch = val;
             
 			//Array.Reverse(b, 9, 4);
             double valy = BitConverter.ToUInt32(b, 9) / 10000.0;
@@ -235,7 +64,7 @@ namespace GroundStation
             {
                 valy = valy - 360;
             }
-            this.yaw.V = valy;
+            this.yaw = valy;
 			
 			//Console.WriteLine("Roll: " + this.roll.V);
 			//Console.WriteLine("Pitch: " + this.pitch.V);
@@ -261,9 +90,9 @@ namespace GroundStation
             string[] words = m.Split(new char[] { ' ', ':' }, StringSplitOptions.RemoveEmptyEntries);
             try
             {
-                this.roll.V = Convert.ToDouble(words[1]);
-                this.pitch.V = Convert.ToDouble(words[2]);
-                this.yaw.V = Convert.ToDouble(words[3]);
+                this.roll = Convert.ToDouble(words[1]);
+                this.pitch = Convert.ToDouble(words[2]);
+                this.yaw = Convert.ToDouble(words[3]);
             }
             catch (Exception e)
             {
@@ -284,9 +113,9 @@ namespace GroundStation
         {
             ImuEulerMessage ans = new ImuEulerMessage();
 			ans.time = imu.time;
-            ans.roll = Field2.DeepCopy(imu.roll);
-            ans.pitch = Field2.DeepCopy(imu.pitch);
-            ans.yaw = Field2.DeepCopy(imu.yaw);
+            ans.roll = imu.roll;
+            ans.pitch = imu.pitch;
+            ans.yaw = imu.yaw;
 
             return ans;
         }

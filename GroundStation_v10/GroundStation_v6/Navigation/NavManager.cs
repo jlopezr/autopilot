@@ -154,7 +154,53 @@ namespace GroundStation
 				this.pid.SetRef(PIDManager.Ctrl.YAW, y);
 		}
 		
-		private void ReadConfig()
+        private void ReadConfig()
+        {
+            NavConfig config = new NavConfig();
+            double gpsTs = 0, adcTs = 0, kp = -1, ki = -1, kd = -1, initialRef;
+            WgsPoint orig = new WgsPoint();
+            gpsTs = config.gpsTs;
+            adcTs = config.adcTs;
+
+            //Altitude
+            kp = config.akp;
+            ki = config.aki;
+            kd = config.akd;
+            initialRef = config.aInitialRef;
+            double maxPitch = config.MaxPitch;
+            double minPitch = config.MinPitch;
+            this.alt = new Altitude(initialRef, adcTs, kp, ki, kd, maxPitch, minPitch);
+
+            //Heading
+            kp = config.hkp;
+            ki = config.hki;
+            kd = config.hkd;
+            initialRef = config.hInitialRef;
+            double maxRoll = config.MaxRoll;
+            this.head = new Heading(initialRef, adcTs, kp, ki, kd, maxRoll);
+
+            //Lateral Navigation
+            kp = config.lkp;
+            ki = config.lki;
+            kd = config.lkd;
+            double lat = config.OriginLat;
+            double lon = config.OriginLon;
+            orig = new WgsPoint(lat, lon, 0);
+
+            //Flight Plan
+            int n = config.WPnum;
+            Queue<WgsPoint> fp = new Queue<WgsPoint>();
+            for (int i = 0; i < n; i++)
+            {
+                double la = config.FPLatitude[i];
+                double lo = config.FPLongitude[i];
+                WgsPoint aux = new WgsPoint(la, lo, 0);
+                fp.Enqueue(aux);
+            }
+            this.latNav = new LatNav(orig, fp, gpsTs, kp, ki, kd);
+        }
+
+		private void ReadConfigText()
 		{
 			StreamReader sr = new StreamReader("NavConfig.txt");
 			double gpsTs = 0, adcTs = 0, kp = -1, ki = -1, kd = -1, initialRef;

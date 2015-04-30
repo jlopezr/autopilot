@@ -9,22 +9,22 @@ namespace GroundStation
 		/// <summary>
 		/// The latitude field
 		/// </summary>
-        public Field2 latitude;
+        public double latitude;
 		
 		/// <summary>
 		/// The longitude field
 		/// </summary>
-        public Field2 longitude;
+        public double longitude;
 		
 		/// <summary>
 		/// The ground speed field
 		/// </summary>
-        public Field2 gndSpeed;
+        public double gndSpeed;
 		
 		/// <summary>
 		/// The track angle field
 		/// </summary>
-        public Field2 trackAngle;
+        public double trackAngle;
 		
 		public double latDev;
 		public double distDest;
@@ -34,121 +34,11 @@ namespace GroundStation
 		/// </summary>
         public WgsPoint pos;
 		
-		/// <summary>
-		/// Minimum expected latitude [deg]
-		/// </summary>
-        private const int latMin = 40;
 		
-		/// <summary>
-		/// Maximum expected latitude [deg]
-		/// </summary>
-        private const int latMax = 43;
-		
-		/// <summary>
-		/// Initial previous latitude value [deg]
-		/// </summary>
-        private const int latPrevValue = 41;
-		
-		/// <summary>
-		/// Initial previous latitude value [deg]
-		/// </summary>
-        private const int latPrevPrevValue = 42;
-		
-		/// <summary>
-		/// Maximum  expected latitude variation [deg/sample]
-		/// </summary>
-        private const double latMaxVar = 0.02;
-		
-		/// <summary>
-		/// Minimum expected longitude [deg]
-		/// </summary>
-        private const int lonMin = 2;
-		
-		/// <summary>
-		/// Maximum expected longitude [deg]
-		/// </summary>
-        private const int lonMax = 5; 
-		
-		/// <summary>
-		/// Initial previous longitude value [deg]
-		/// </summary>
-        private const int lonPrevValue = 3;
-		
-		/// <summary>
-		/// Initial previous longitude value [deg]
-		/// </summary>
-        private const int lonPrevPrevValue = 3;
-		
-		/// <summary>
-		/// Maximum expected longitude variation [deg/sample]
-		/// </summary>
-        private const double lonMaxVar = 0.02;
-		
-		/// <summary>
-		/// Minimum expected ground speed [m/s]
-		/// </summary>
-        private const int gndSpeedMin = 0;
-		
-		/// <summary>
-		/// Maximum expected ground speed [m/s]
-		/// </summary>
-        private const int gndSpeedMax = 40;
-		
-		/// <summary>
-		/// Initial previous ground speed value [m/s]
-		/// </summary>
-        private const int gndSpeedPrevValue = 0;
-		
-		/// <summary>
-		/// Initial previous ground speed value [m/s]
-		/// </summary>
-        private const int gndSpeedPrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected ground speed variation [m/(s·sample)]
-		/// </summary>
-        private const int gndSpeedMaxVar = 20;
-		
-		/// <summary>
-		/// Minimum expected track angle [deg]
-		/// </summary>
-        private const int trackAngleMin = -180;
-		
-		/// <summary>
-		/// Maximum expected track angle [deg]
-		/// </summary>
-        private const int trackAngleMax = 180;
-		
-		/// <summary>
-		/// Initial previous track angle value [deg]
-		/// </summary>
-        private const int trackAnglePrevValue = 0;
-		
-		/// <summary>
-		/// Initial previous track angle value [deg]
-		/// </summary>
-		private const int trackAnglePrevPrevValue = 0;
-		
-		/// <summary>
-		/// Maximum expected track angle variation [deg/sample]
-		/// </summary>
-        private const int trackAngleMaxVar = 180;
-		
-		private const int magVarMin = -90;
-		private const int magVarMax = 90;
-		private const int magVarPrevValue = 0;
-		private const int magVarMaxVar = 1;
 		
 		public GpsPosMessage ()
 		: base()
-		{
-			this.latitude = new Field2(latMin, latMax, latPrevValue, latMaxVar);
-            this.longitude = new Field2(lonMin, lonMax, lonPrevValue, lonMaxVar);
-            this.gndSpeed = new Field2(gndSpeedMin, gndSpeedMax, gndSpeedPrevValue, gndSpeedMaxVar);
-            this.trackAngle = new Field2(trackAngleMin, trackAngleMax,  trackAngleMaxVar);
-			
-			//this.magVar = new Field2(magVarMin, magVarMax, magVarPrevValue, magVarMaxVar);
-		}
+		{ }
 		
 		/// <summary>
 		/// Creates the message.
@@ -177,7 +67,7 @@ namespace GroundStation
 				lat = (lat - latTrunc)/60.0*100.0;
 				lat += latTrunc;
 				lat = words[4] == "N" ? lat : -lat;
-	 			this.latitude.V = lat;
+	 			this.latitude = lat;
 				
 				double lon = double.Parse(words[5]);
 				lon /= 100.0;
@@ -185,18 +75,18 @@ namespace GroundStation
 				lon = (lon - lonTrunc)/60.0*100.0;
 				lon += lonTrunc;
 				lon = words[6] == "E" ? lon : -lon;
-				this.longitude.V = lon;
+				this.longitude = lon;
 				
-				this.gndSpeed.V = double.Parse(words[7]) * 1852.0/3600.0; //kt a m/s
+				this.gndSpeed = double.Parse(words[7]) * 1852.0/3600.0; //kt a m/s
 				
 				double track = double.Parse(words[8]);
 				if(track > 180.0)
 				{
 					track -= 360.0;
 				}
-				this.trackAngle.V = track;
+				this.trackAngle = track;
 				
-				this.pos = new WgsPoint(this.latitude.V, this.longitude.V, 0);
+				this.pos = new WgsPoint(this.latitude, this.longitude, 0);
 			}
 			catch(Exception)
 			{}
@@ -211,10 +101,10 @@ namespace GroundStation
 		{
 			GpsPosMessage ans = new GpsPosMessage();
 			ans.time = this.time;
-			ans.latitude = Field2.DeepCopy(this.latitude);
-			ans.longitude = Field2.DeepCopy(this.longitude);
-			ans.gndSpeed = Field2.DeepCopy(this.gndSpeed);
-			ans.trackAngle = Field2.DeepCopy(this.trackAngle);
+			ans.latitude = this.latitude;
+			ans.longitude = this.longitude;
+			ans.gndSpeed = this.gndSpeed;
+			ans.trackAngle = this.trackAngle;
 			ans.pos = this.pos.DeepCopy();
 			ans.latDev = this.latDev;
 			ans.distDest = this.distDest;

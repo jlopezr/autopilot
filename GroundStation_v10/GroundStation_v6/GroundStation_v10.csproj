@@ -41,15 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ACPerformance.cs" />
+    <Compile Include="Configuration\NavConfig.cs" />
+    <Compile Include="Configuration\PidConfig.cs" />
     <Compile Include="GlobalArea.cs" />
     <Compile Include="Input\Input.cs" />
     <Compile Include="Input\SerialInput.cs" />
     <Compile Include="Messages\AdcMessage.cs" />
     <Compile Include="Messages\Database.cs" />
-    <Compile Include="Messages\Fields\Field.cs" />
-    <Compile Include="Messages\GpsMessage.cs" />
     <Compile Include="Messages\ImuEulerMessage.cs" />
-    <Compile Include="Messages\ImuRawMessage.cs" />
     <Compile Include="Messages\Message.cs" />
     <Compile Include="Messages\PwmMessage.cs" />
     <Compile Include="Output\Output.cs" />
@@ -66,7 +66,6 @@
     <Compile Include="AircraftPerformance.cs" />
     <Compile Include="Navigation\NavManager.cs" />
     <Compile Include="Output\Path.cs" />
-    <Compile Include="Messages\Fields\Field2.cs" />
     <Compile Include="Processing\RollPID.cs" />
     <Compile Include="Processing\PitchPID.cs" />
     <Compile Include="Processing\YawPID.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="Input\FileInput.cs" />
     <Compile Include="Input\FileDebug\Telemetry.cs" />
     <Compile Include="Messages\GpsPosMessage.cs" />
-    <Compile Include="Messages\GpsDopMessage.cs" />
     <Compile Include="XPlane\PipeStream.cs" />
     <Compile Include="XPlane\Read.cs" />
     <Compile Include="XPlane\Telemetrysim.cs" />

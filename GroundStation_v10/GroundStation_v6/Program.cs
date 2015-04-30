@@ -41,8 +41,6 @@ namespace GroundStation
 			AdcMessage adc = new AdcMessage();
 			ImuEulerMessage imu = new ImuEulerMessage();
 			PwmMessage pwm = new PwmMessage();
-			GpsMessage gps = new GpsMessage();
-			GpsDopMessage dop = new GpsDopMessage();
 			GpsPosMessage pos = new GpsPosMessage();
 			nav.Initialize();
             
@@ -109,42 +107,7 @@ namespace GroundStation
                         ga.Pwm = pwm;
                         db.Add(ga.Pwm);
                         break;
-                    case (byte)5: //Gps (deprecated)  //13 bytes del GPS: time/lat/lon/gndspeed/trackangle (1/4/4/2/2) bytes  NO LO USA??
-                        m = p.ReadNBytes(13);
-                        time += m[0];
-                        gps.CreateMessage(time, m);
-                        ga.Gps = gps;
-                        db.Add(ga.Gps);
-						if(ga.IsReady())
-							nav.SetPosition(ga.Gps.pos);
-                        break;
-                    case (byte)6: //GpsDop  NO LO USA??
-						m = p.ReadNBytes(p.ReadNBytes(1)[0]-4);
-						time += m[0];
-                        dop.CreateMessage(time, m);
-                        ga.Dop = dop;
-                        db.Add(ga.Dop);
-                        break;
-                    case (byte)7: //GpsPos  NO LO USA??
-                        m = p.ReadNBytes(p.ReadNBytes(1)[0]-4);
-                        time += m[0];
-                        pos.CreateMessage(time, m);
-                        
-						if(ga.IsReady())
-						{
-							nav.SetPosition(pos.pos);
-							pos.distDest = nav.latNav.distDest;
-							pos.latDev = nav.latNav.latDev;
-						}
-						else
-						{
-							pos.distDest = -100;
-							pos.latDev = -100;
-						}
-						ga.Pos = pos;
-                        db.Add(ga.Pos);
-                        break;
-				case (byte)8:  //GPS  ESTE ES EL QUE USA
+				case (byte)8:  //GPS
 						byte count = p.ReadNBytes(1)[0]; //Lee el Lenghtmess(No incluye time)
 						m = p.ReadNBytes(count+1); //Lee (Lenghtmess+1) bytes
 						time += m[0];
@@ -166,12 +129,6 @@ namespace GroundStation
 							{
 								nav.SetPosition(ga.Pos.pos);
 							}
-						}
-						else if(h == "$GPGSA") //No funciona?
-						{
-	                        dop.CreateMessage(time, m);
-	                        ga.Dop = dop;
-	                        db.Add(ga.Dop);
 						}
 						break;
 					
@@ -208,7 +165,7 @@ namespace GroundStation
 
                 if (i == 10)
                 {
-                    op.Flush(db);  //Cada 10 ciclos guarda los datos en texto
+                    //op.Flush(db);  //Cada 10 ciclos guarda los datos en texto
                     i = 0;
                 }
                 i++;
@@ -386,7 +343,7 @@ namespace GroundStation
 		private static byte RollCalib(PIDManager pid, ImuEulerMessage m)
 		{
 			byte ans;
-			if(m.roll.V > 2)
+			if(m.roll > 2)
 			{	
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.ROLL);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.ROLL);
@@ -397,7 +354,7 @@ namespace GroundStation
 				ans = (byte)(((meanVal - calValueRoll)-offset)/span);
 				stateRoll = false;
 			}
-			else if(m.roll.V < -2)
+			else if(m.roll < -2)
 			{
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.ROLL);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.ROLL);
@@ -436,7 +393,7 @@ namespace GroundStation
 		private static byte PitchCalib(PIDManager pid, ImuEulerMessage m)
 		{
 			byte ans;
-			if(m.pitch.V > 2)
+			if(m.pitch > 2)
 			{
 				
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.PITCH);
@@ -448,7 +405,7 @@ namespace GroundStation
 				ans = (byte)(((meanVal + calValuePitch)-offset)/span);
 				statePitch = false;
 			}
-			else if(m.pitch.V < -2)
+			else if(m.pitch < -2)
 			{
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.PITCH);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.PITCH);
@@ -488,7 +445,7 @@ namespace GroundStation
 		{
 			byte ans;
 			Console.WriteLine("INITIAL VAL: " + pid.GetParam(PIDManager.Ctrl.YAW, PID.Param.INITIAL_VAL));
-			if((m.yaw.V - pid.GetParam(PIDManager.Ctrl.YAW, PID.Param.INITIAL_VAL)) > 2)
+			if((m.yaw - pid.GetParam(PIDManager.Ctrl.YAW, PID.Param.INITIAL_VAL)) > 2)
 			{
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.YAW);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.YAW);
@@ -496,7 +453,7 @@ namespace GroundStation
 				ans = (byte)(((meanVal - calValueYaw)-offset)/span);
 				stateYaw = true;
 			}
-			else if(m.yaw.V - pid.GetParam(PIDManager.Ctrl.YAW, PID.Param.INITIAL_VAL) < -2)
+			else if(m.yaw - pid.GetParam(PIDManager.Ctrl.YAW, PID.Param.INITIAL_VAL) < -2)
 			{
 				int meanVal = pid.GetMeanValue(PIDManager.Ctrl.YAW);
 				double span = pid.GetSpanValue(PIDManager.Ctrl.YAW);

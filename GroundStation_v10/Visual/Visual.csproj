@@ -33,52 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\gtk\gtk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\gdk\gdk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>glib-sharp-2.0</Package>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\glib\glib-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>glade-sharp-2.0</Package>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\glade\glade-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\pango\pango-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <Package>gtk-sharp-2.0</Package>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\atk\atk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Posix">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\Mono.Posix\Mono.Posix.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cairo">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Mono\lib\Mono.Cairo\Mono.Cairo.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="gtk-gui\gui.stetic">
-      <LogicalName>gui.stetic</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="MainWindow.cs" />
-    <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>

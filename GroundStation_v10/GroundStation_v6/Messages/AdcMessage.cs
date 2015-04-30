@@ -15,17 +15,17 @@ namespace GroundStation
 		/// <summary>
 		/// The barometer field
 		/// </summary>
-        public Field2 barometer;
+        public double barometer;
 		
 		/// <summary>
 		/// The thermometer field
 		/// </summary>
-        public Field2 thermometer;
+        public double thermometer;
 		
 		/// <summary>
 		/// The pitot field
 		/// </summary>
-        public Field2 pitot;
+        public double pitot;
         
 		/// <summary>
 		/// The true airspeed (TAS)
@@ -67,80 +67,7 @@ namespace GroundStation
 		/// </summary>
         private const double g = 9.80665;
 		
-		/// <summary>
-		/// Minimum expected static pressure [Pa]
-		/// </summary>
-        private const int barMin = 1000;
 		
-		/// <summary>
-		/// Maximum expected static pressure [Pa]
-		/// </summary>
-        private const int barMax = 102000;
-		
-		/// <summary>
-		/// Initial static pressure previous value [Pa]
-		/// </summary>
-        private const int barPrevValue = 99500;
-		
-		/// <summary>
-		/// Initial static pressure previous value [Pa]
-		/// </summary>
-        private const int barPrevPrevValue = 99500;
-		
-		/// <summary>
-		/// Maximum expected static pressure variation [Pa/sample]
-		/// </summary>
-        private const int barMaxVar = 500;
-		
-		/// <summary>
-		/// Minimum expected temperature. [K]
-		/// </summary>
-        private const int tempMin = 273; //0 ºC
-		
-		/// <summary>
-		/// Maximum expected temperature. [K]
-		/// </summary>
-        private const int tempMax = 313; //40 ºC
-		
-		/// <summary>
-		/// Initial temperature previous value [K]
-		/// </summary>
-        private const int tempPrevValue = 300;
-		
-		/// <summary>
-		/// Initial temperature previous value [K]
-		/// </summary>
-        private const int tempPrevPrevValue = 300;
-		
-		/// <summary>
-		/// Maximum expected temperature variation [K/sample]
-		/// </summary>
-        private const int tempMaxVar = 2;
-		
-		/// <summary>
-		/// Minimum expected dynamic pressure [Pa]
-		/// </summary>
-        private const int pitotMin = 10;
-		
-		/// <summary>
-		/// Maximum expected dynamic pressure [Pa]
-		/// </summary>
-        private const int pitotMax = 10000;
-		
-		/// <summary>
-		/// Initial previous dynamic pressure value [Pa]
-		/// </summary>
-        private const int pitotPrevValue = 130;
-		
-		/// <summary>
-		/// Initial previous dynamic pressure value [Pa]
-		/// </summary>
-        private const int pitotPrevPrevValue = 130;
-		
-		/// <summary>
-		/// Maximum expected dynamic pressure variation [Pa/sample].
-		/// </summary>
-        private const int pitotMaxVar = 600;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GroundStation.AdcMessage"/> class.
@@ -153,11 +80,7 @@ namespace GroundStation
 		/// </param>
         public AdcMessage()
             : base()
-        {
-			this.barometer = new Field2(barMin, barMax, barPrevValue);
-            this.thermometer = new Field2(tempMin, tempMax, tempPrevValue);
-            this.pitot = new Field2(pitotMin, pitotMax, pitotPrevValue);
-        }
+        { }
 
 		
 		/// <summary>
@@ -233,9 +156,9 @@ namespace GroundStation
             this.pitot.V = (p / 5.0 - 0.2) / 0.2 * 1000.0;//1000*p+1000*/
 
             //Los paso como float asi que no hace falta tratarlos
-            this.barometer.V = b/1000;  
-            this.thermometer.V = t/1000;
-            this.pitot.V = p/1000;
+            this.barometer = b/1000;  
+            this.thermometer = t/1000;
+            this.pitot = p/1000;
         }
 		
 		/// <summary>
@@ -244,10 +167,10 @@ namespace GroundStation
         private void CalculateExtras()
         {
             //tas[kt] = a0[kt] * sqrt(5*((qc[Hg]/P[Hg]+1)^2/7 - 1)*T[K]/T0[K]
-            this.tas = a0 * Math.Sqrt(5 * (Math.Pow(this.pitot.V / this.barometer.V + 1, 2 / 7.0) - 1) * this.thermometer.V / T0) /*- 29*/; // - 29::Offset degut a error en la tensio.
+            this.tas = a0 * Math.Sqrt(5 * (Math.Pow(this.pitot / this.barometer + 1, 2 / 7.0) - 1) * this.thermometer / T0) /*- 29*/; // - 29::Offset degut a error en la tensio.
             //Pz = P0*((T0+lambda*z)/T0)^(-g/(R*lambda))
             //z = T0*((P0/Pz)^(R*lambda/g)-1)/lambda
-            this.altitude = T0 * (Math.Pow((P0 / this.barometer.V), R * lambda / g) - 1) / lambda;
+            this.altitude = T0 * (Math.Pow((P0 / this.barometer), R * lambda / g) - 1) / lambda;
         }
 		
 		/// <summary>
@@ -264,11 +187,11 @@ namespace GroundStation
             AdcMessage ans = new AdcMessage();
             ans.time = adc.time;
             ans.altitude = adc.altitude;
-            ans.tas = adc.tas; 
+            ans.tas = adc.tas;
 
-            ans.barometer = Field2.DeepCopy(adc.barometer);
-            ans.thermometer = Field2.DeepCopy(adc.thermometer);
-            ans.pitot = Field2.DeepCopy(adc.pitot);
+            ans.barometer = adc.barometer;
+            ans.thermometer = adc.thermometer;
+            ans.pitot = adc.pitot;
 
             return ans;
         }
