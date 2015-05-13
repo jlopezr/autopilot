@@ -67,7 +67,7 @@ namespace GroundStation
 		        
         private void SetInfo()
         {
-            PidConfig config = new PidConfig(PidConfig.ACModel.RC); //Change A/C model here and in AircraftPerformance class
+            PidConfig config = new PidConfig(PidConfig.ACModel.C172); //Change A/C model here and in AircraftPerformance class
             int ch, offset, minVal, maxVal, meanVal;
             double spanFactor, imuTs = -1, adcTs = -1, kp, ki, kd, refValue;
             imuTs = config.imuTs;

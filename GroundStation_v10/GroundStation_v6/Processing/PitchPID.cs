@@ -14,6 +14,7 @@ namespace GroundStation
 		public override void SetValue(double input)
 		{
 			base.SetValue(input);
+            //Console.WriteLine("Pitch {0}", input);
 		}
 	}
 }

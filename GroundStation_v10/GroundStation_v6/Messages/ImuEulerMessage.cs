@@ -52,23 +52,23 @@ namespace GroundStation
 			this.time = time;
 			//Console.WriteLine("Time: " + this.time);
             //Array.Reverse(b, 1, 4);
-            this.roll = BitConverter.ToUInt32(b, 1) / 10000.0 - 180.0;
+            this.roll = BitConverter.ToUInt32(b, 0) / 10000.0 - 180.0;
 			
             //Array.Reverse(b, 5, 4);
-            double val = BitConverter.ToUInt32(b, 5) / 10000.0 - 180.0;
+            double val = BitConverter.ToUInt32(b, 4) / 10000.0 - 180.0;
 			this.pitch = val;
             
 			//Array.Reverse(b, 9, 4);
-            double valy = BitConverter.ToUInt32(b, 9) / 10000.0;
+            double valy = BitConverter.ToUInt32(b, 8) / 10000.0;
             if (valy > 180)
             {
                 valy = valy - 360;
             }
             this.yaw = valy;
 			
-			//Console.WriteLine("Roll: " + this.roll.V);
-			//Console.WriteLine("Pitch: " + this.pitch.V);
-			//Console.WriteLine("Yaw: " + this.yaw.V);
+			//Console.WriteLine("Roll: " + this.roll);
+			//Console.WriteLine("Pitch: " + this.pitch);
+			//Console.WriteLine("Yaw: " + this.yaw);
             
 			
 			/*Array.Reverse(b, 13, 4);

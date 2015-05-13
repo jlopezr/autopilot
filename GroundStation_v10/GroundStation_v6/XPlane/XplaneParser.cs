@@ -24,6 +24,10 @@ namespace XPlane
         private byte[] IMU;
         private byte[] ADC;
         //private byte[] PWM;
+        private bool firstTime = true;
+        private byte[] elapsedTimeb;
+        int PacketNum = 0;
+
         
 
         public PipeStream mPipeStream; // the shared stream
@@ -53,16 +57,33 @@ namespace XPlane
 			th.Start();
 		}
 
+        double elapsedtime;
 		private void ReceivePacket() //Lo llama el Start
 		{
 			byte[] data = new byte[5120];
 			int recv = 0;
-
+            DateTime prevtime = DateTime.UtcNow;
 			while ((recv = connection.ReceivePacket(ref data)) > 0 && !exit)
 			{
 				ProcessPacket(data);
+                DateTime time2 = DateTime.UtcNow;
+
+                if (firstTime)
+                {
+                    elapsedtime = 0;
+                    firstTime=false;
+                    prevtime = time2;
+                }
+                else
+                {
+                    elapsedtime = ((time2 - prevtime).TotalMilliseconds);
+                    double timedebug = (time2 - prevtime).TotalMilliseconds;
+                    //Console.WriteLine("time {0}", timedebug);
+                    prevtime = time2;
+                }
 			}
 		}
+
 
 		private void ProcessPacket(byte[] data)
 		{
@@ -77,6 +98,9 @@ namespace XPlane
                     //Cada vez que entra recopila todos los datos anteriores los trata (y los saca por la pipe...)
                     if (Angles != null && AoA != -999 && Speeds != -999 && Atmosphere != null && Position != null && ZuluTime != -999)//??????????????????????????????????????????????????????????????
                     {
+                        PacketNum++;
+                        double control = PacketNum * 10000;
+                        elapsedTimeb = BitConverter.GetBytes(Convert.ToInt32((elapsedtime /*+ control*/) * 10));
                         //IMU
                         byte[] header = new byte[5];
                         header[0] = 1;
@@ -84,12 +108,14 @@ namespace XPlane
                         header[2] = 1;
                         header[3] = 0;
                         header[4] = 1;//time
+                        byte[] realtime = elapsedTimeb;
                         Angles[0] = (Angles[0] + 180) * 10000;
                         Angles[1] = (Angles[1] + 180) * 10000;
                         //Angles[2] = (Angles[2] + 180) * 10000; //beta
                         Angles[2] = Angles[3] * 10000; //hdg //No suma 180. El programa quiere heading entre +-180 y le resta 180
 
-                        IMU = header.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[1]))).ToArray(); //Comprobar si hay que sumar/restar 180 antes de *10000
+                        IMU = header.Concat(realtime).ToArray();
+                        IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[1]))).ToArray(); 
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[0]))).ToArray();
                         IMU = IMU.Concat(BitConverter.GetBytes(Convert.ToInt32(Angles[2]))).ToArray();
 

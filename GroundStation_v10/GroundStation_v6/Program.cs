@@ -17,6 +17,7 @@ namespace GroundStation
 		private static readonly int b19200 = 19200;*/
 		private static readonly int b57600 = 57600;
 		private static ulong time = 0;
+        private static int syncpack = 1; //Increases 1 for every packet
         private static Output op;
         public static void Run() //Se ejecuta desde Exec/Main
         {
@@ -34,6 +35,8 @@ namespace GroundStation
 		
 		private static void RunTelemetry()
 		{
+            //DateTime begin1 = DateTime.UtcNow;
+
             GlobalArea ga = GlobalArea.GetInstance();
             Database db = Database.GetInstance();
 			PIDManager pid = PIDManager.GetInstance();
@@ -66,6 +69,8 @@ namespace GroundStation
             int i = 0;
             while (true)
             {
+                //DateTime begin1 = DateTime.UtcNow;
+
                 p.CheckStartOfMessage();  //Busca el inicio del mensaje
 				//Console.WriteLine("Message Received");
                 byte[] header = p.ReadNBytes(1);
@@ -73,8 +78,20 @@ namespace GroundStation
                 switch (header[0])
                 {
                     case (byte)0: //IMU-Euler Angles
-                        m = p.ReadNBytes(13);  //13 bytes son de la IMU y tienen: time/roll/pitch/yaw/accX/accY/accZ
-                        time += m[0];
+                        byte[] timebytes = p.ReadNBytes(5);
+                        float recetime = BitConverter.ToInt32(timebytes, 1);
+                        //Console.WriteLine(recetime);
+                        m = p.ReadNBytes(12);  //13 bytes son de la IMU y tienen: time/roll/pitch/yaw
+                        float A = BitConverter.ToInt32(timebytes, 1)/10;
+                        int B = syncpack * 100000;
+                        float C = A /*- B*/;
+                        float resul = C;
+                        //Console.WriteLine("res:{0}", resul);
+                        if (C < 10000)
+                        {
+                            time += Convert.ToUInt64(C);
+                            syncpack++;
+                        }
                         imu.CreateMessage(time, m);
                         ga.Imu = imu;
                         db.Add(ga.Imu);
@@ -88,8 +105,8 @@ namespace GroundStation
 						}
                         break;
                     case (byte)3: //Adc
-                        m = p.ReadNBytes(13);  //7 (13)bytes son del ADC: time/barometro/termometro/pitot (ocupan 2 bytes todos menos time(1)) y calcula TAS y Altitud (ocupan 2 bytes)
-                        time += m[0];
+                        m = p.ReadNBytes(13);  //(13)bytes son del ADC: time/barometro/termometro/pitot (ocupan 2 bytes todos menos time(1)) y calcula TAS y Altitud (ocupan 2 bytes)
+                        //time += m[0];
                         adc.CreateMessage(time, m);
                         ga.Adc = adc;
                         db.Add(ga.Adc);
@@ -102,7 +119,7 @@ namespace GroundStation
                         break;
                     case (byte)4: //Pwm   //9 bytes: time/ch1/ch2/ch3/ch4 (valor de variables chX entre 1000 y 2000) ocupan 2 bytes
                         m = p.ReadNBytes(9);
-                        time += m[0];
+                        //time += m[0];
                         pwm.CreateMessage(time, m);
                         ga.Pwm = pwm;
                         db.Add(ga.Pwm);
@@ -110,7 +127,7 @@ namespace GroundStation
 				case (byte)8:  //GPS
 						byte count = p.ReadNBytes(1)[0]; //Lee el Lenghtmess(No incluye time)
 						m = p.ReadNBytes(count+1); //Lee (Lenghtmess+1) bytes
-						time += m[0];
+						//time += m[0];
                         byte[] c = new byte[12];
 						
 						for(int j = 1; j < 13; j++)
@@ -169,6 +186,8 @@ namespace GroundStation
                     i = 0;
                 }
                 i++;
+                //DateTime end1 = DateTime.UtcNow;
+                //Console.WriteLine("Measured time: " + (end1 - begin1).TotalMilliseconds + " ms.");
             }
         } 
     	

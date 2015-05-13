@@ -47,6 +47,7 @@ namespace GroundStation
 			{
                 case "help":
                     Console.WriteLine("Set parameter and new value separated by a space");
+                Console.WriteLine("tm - switch to attitude mode");
 				Console.WriteLine("dm - switch to directed mode");
 				Console.WriteLine("am - switch to autonomous mode");
 				Console.WriteLine("mm - switch to manual mode");
@@ -167,6 +168,7 @@ namespace GroundStation
 					Console.WriteLine();
 					return false;
 				}
+                Console.WriteLine("Selected altitude in feet:{0}", (int)(a/0.303));
 				this.nav.SetAltitude(a);
 				break;
 			case "ny":
@@ -189,7 +191,7 @@ namespace GroundStation
 				}
 				if (ny < -25 || ny > 25)
 				{
-					Console.WriteLine("Yaw out of range. It must be range between -15 and 15 degrees");
+					Console.WriteLine("Yaw out of range. It must be range between -25 and 25 degrees");
 					Console.WriteLine();
 					return false;
 				}
@@ -293,6 +295,9 @@ namespace GroundStation
 				Console.WriteLine("Current pitch: " + ga.Imu.pitch);
 				val = ga.Imu.pitch;
 				break;
+            case "tm":
+                this.nav.Switch(NavManager.Mode.ATTITUDE);
+                break;
 			case "mm":
 				this.nav.Switch(NavManager.Mode.MANUAL);
 				break;

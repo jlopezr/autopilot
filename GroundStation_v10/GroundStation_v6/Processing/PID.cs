@@ -133,8 +133,8 @@ namespace GroundStation
 			this.minVal = minVal;
 			this.maxVal = maxVal;
 			this.meanVal = meanVal;
-			
-			this.refValue = 0;
+
+            this.refValue = 0;
 			this.initialVal = refValue;
         }
 
@@ -186,11 +186,11 @@ namespace GroundStation
 
                 double ansdiff = this.kp * input + this.ki * this.ts * this.acc + this.kd * diff / this.ts;
                 double ans = this.prevans + ansdiff;
-                Console.WriteLine("Throttle:{0}", ans);
+                //Console.WriteLine("Throttle:{0}", ans);
                 ans += this.meanVal;
                 ans = ans < this.minVal ? ans = this.minVal : ans;
                 ans = ans > this.maxVal ? ans = this.maxVal : ans;
-                Console.WriteLine("Throttlesend:{0}", ans);
+                //Console.WriteLine("Throttlesend:{0}", ans);
                 this.prevans = ans;
                 this.currValue = (byte)Math.Round((ans - this.offset) / this.spanFactor);
             }

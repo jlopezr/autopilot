@@ -19,6 +19,7 @@ namespace GroundStation
 		public enum Mode
 		{
 			MANUAL,
+            ATTITUDE,
 			DIRECTED,
 			AUTONOMOUS,
 			CALIBRATION_THROTTLE,
@@ -67,7 +68,13 @@ namespace GroundStation
 				//this.speed.activate();
 				this.latNav.activate();
 				break;
-			case Mode.DIRECTED:
+            case Mode.DIRECTED:
+                this.alt.activate();
+                this.head.activate();
+                this.latNav.deactivate();
+                //this.speed.activate();
+                break;
+			case Mode.ATTITUDE:
 			case Mode.MANUAL:
 			case Mode.CALIBRATION_THROTTLE:
 			case Mode.CALIBRATION_ROLL:
@@ -75,7 +82,10 @@ namespace GroundStation
 			case Mode.CALIBRATION_YAW:
 				this.alt.deactivate();
 				this.head.deactivate();
+                this.latNav.deactivate();
 				//this.speed.deactivate();
+
+                //double pruebab = this.pid.GetParam(PIDManager.Ctrl.PITCH, PID.Param.INITIAL_VAL);
 				break;
 			}
 		}
@@ -87,19 +97,19 @@ namespace GroundStation
 			
 		public void SetAltitude(double altRef)
 		{
-			if(this.alt != null && this.currMode == Mode.AUTONOMOUS)
+            if (this.alt != null && (this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED))
 				this.alt.SetParam(altRef);
 		}
 		
 		public void SetHeading(double headRef )
 		{
-			if(this.head != null && this.currMode == Mode.AUTONOMOUS)
+            if (this.head != null && (this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED))
 				this.head.SetParam(headRef);
 		}
 		
 		public void SetSpeed(double speedRef)
 		{
-            if ((this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED))
+            if ((this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED || this.currMode == Mode.ATTITUDE))
                 //this.speed.SetParam(speedRef); //No se necesita un Upperlayer
                 this.pid.RefreshParam(PIDManager.Ctrl.THROTTLE, PID.Param.INITIAL_VAL, speedRef);
 		}
@@ -112,19 +122,19 @@ namespace GroundStation
 		
 		public void UpdateAltRef()
 		{
-			if(this.alt != null && this.currMode == Mode.AUTONOMOUS)
+            if (this.alt != null && (this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED))
 			 this.alt.GetRef();
 		}
 		
 		public void UpdateHeadRef()
 		{
-			if(this.alt != null && this.currMode == Mode.AUTONOMOUS)
+            if (this.alt != null && (this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED))
 				this.head.GetRef();
 		}
 		
 		public void UpdateSpeedRef()
 		{
-            if (this.alt != null && this.currMode == Mode.AUTONOMOUS)
+            if ((this.currMode == Mode.AUTONOMOUS || this.currMode == Mode.DIRECTED || this.currMode == Mode.ATTITUDE))
                 //this.speed.GetRef(); //No se necesita un Upperlayer
                 this.pid.GetCh(1);
 		}
@@ -138,13 +148,13 @@ namespace GroundStation
 		
 		public void UpdateRollRef(double r)
 		{
-			if(this.currMode == Mode.DIRECTED)
+            if (this.currMode == Mode.ATTITUDE)
 				this.pid.SetRef(PIDManager.Ctrl.ROLL, r);
 		}
 		
 		public void UpdatePitchRef(double p)
 		{
-			if(this.currMode == Mode.DIRECTED)
+			if(this.currMode == Mode.ATTITUDE)
 				this.pid.SetRef(PIDManager.Ctrl.PITCH, p);
 		}
 		

@@ -27,7 +27,7 @@ namespace GroundStation
 		
         private AircraftPerformance ()
         {
-            ACPerformance Performance = new ACPerformance(ACPerformance.ACModel.RC); //Chance A/C model here and in PIDManager class
+            ACPerformance Performance = new ACPerformance(ACPerformance.ACModel.C172); //Chance A/C model here and in PIDManager class
             this.stallTas = Performance.stallSpeed;
             this.maxBank = Performance.maxBank;
         }

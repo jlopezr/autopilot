@@ -13,7 +13,7 @@ namespace GroundStation
 		
 		public override void SetValue(double input)
 		{
-            Console.WriteLine("Speed:{0}", input);
+            //Console.WriteLine("Speed:{0}", input);
 			input = -(input - this.refValue - this.initialVal);
 			this.RefreshPidThrottle(input);
 		}

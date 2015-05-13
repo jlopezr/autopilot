@@ -40,7 +40,7 @@ namespace GroundStation
             {
                 diffHeading = diffHeading - 360;
             }
-            Console.WriteLine("Selected HDG: {1}  HDG diff: {0}  Actual HDG: {2}", diffHeading, selHeading, currHeading);
+            //Console.WriteLine("Selected HDG: {1}  HDG diff: {0}  Actual HDG: {2}", diffHeading, selHeading, currHeading);
 			double vStall = this.ap.stallTas;
 			double currTas = this.ga.Adc.tas;
 			double currRoll = this.ga.Imu.roll;

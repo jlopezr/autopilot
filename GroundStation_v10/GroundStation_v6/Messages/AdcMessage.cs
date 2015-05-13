@@ -94,11 +94,11 @@ namespace GroundStation
             double b, t, p;
 			this.time = time;
             //Array.Reverse(bArray, 1, 4);
-            b = BitConverter.ToUInt32(bArray, 1);
+            b = BitConverter.ToInt32(bArray, 1);
             //Array.Reverse(bArray, 5, 4);
-            t = BitConverter.ToUInt32(bArray, 5);
+            t = BitConverter.ToInt32(bArray, 5);
             //Array.Reverse(bArray, 9, 4);
-            p = BitConverter.ToUInt32(bArray, 9);
+            p = BitConverter.ToInt32(bArray, 9);
             this.ConvertData(b, t, p);
             this.CalculateExtras();
 			

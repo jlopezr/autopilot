@@ -5,7 +5,7 @@ namespace GroundStation
 {
 	public class Path
 	{
-		private static readonly string path = Directory.GetCurrentDirectory()+System.IO.Path.DirectorySeparatorChar+"Logs";
+        private static readonly string path = Directory.GetCurrentDirectory() + System.IO.Path.DirectorySeparatorChar + "Logs" + System.IO.Path.DirectorySeparatorChar;
 		private string folder;
 		private static Path instance = null;
 		
@@ -20,7 +20,7 @@ namespace GroundStation
 		{
 			string[] dirPaths = Directory.GetDirectories(path);
 			this.folder = dirPaths.Length.ToString();
-			Directory.CreateDirectory(path + this.folder);
+            Directory.CreateDirectory(path + this.folder);
 		}
 		
 		public string GetPath()
