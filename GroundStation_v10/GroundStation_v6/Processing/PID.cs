@@ -7,6 +7,7 @@ namespace GroundStation
 {
     public abstract class PID
     {
+
 		/// <summary>
 		/// Parameters.
 		/// </summary>
@@ -149,6 +150,18 @@ namespace GroundStation
 				this.RefreshPid(-input);
 			}
         }
+
+        public virtual void SetValue(double input, int model)
+        {
+            lock (this.mutex)
+            {
+                //if (Name == "Pitch") {
+                //    Console.WriteLine("["+Name+ "] INPUT:" + input +" COMMAND: "+refValue + " ERROR: "+(input-refValue));
+                //}
+                input = (input - this.refValue - this.initialVal);
+                this.RefreshPid(-input);
+            }
+        }
 		
 		public void RefreshPid(double input)
 		{
@@ -224,6 +237,8 @@ namespace GroundStation
 				this.refValue = refValue;
 			}
 		}
+
+        
 		
 		public void SetPwmIn(byte pwmIn)
 		{

@@ -20,17 +20,53 @@ namespace GroundStation
 		
 		public static AircraftPerformance GetInstance()
 		{
-			if(instance == null)
-				instance = new AircraftPerformance();
+            if (instance == null)
+                Console.WriteLine("Error: null AircraftPerformance instance");
 			return instance;
 		}
-		
-        private AircraftPerformance ()
+
+        public static AircraftPerformance GetInstance(int m)
         {
-            ACPerformance Performance = new ACPerformance(ACPerformance.ACModel.C172); //Chance A/C model here and in PIDManager class
-            this.stallTas = Performance.stallSpeed;
-            this.maxBank = Performance.maxBank;
+            if (instance == null)
+            {
+                ACPerformance p;
+                if (m == 1) //Models are used here
+                {
+                    p = new C172ACPerformance();
+                    instance = new AircraftPerformance(p);
+                }
+                if (m == 2)
+                {
+                    p = new RCACPerformance();
+                    instance = new AircraftPerformance(p);
+                }
+                if (m == 3)
+                {
+                    p = new CirrusACPerformance();
+                    instance = new AircraftPerformance(p);
+                }
+                if (m == 20)
+                {
+                    p = new QXACPerformance();
+                    instance = new AircraftPerformance(p);
+                }
+                
+            }
+
+            return instance;
         }
+		
+        private AircraftPerformance (ACPerformance perf)
+        {
+            /*ACPerformance Performance = new ACPerformance(ACPerformance.ACModel.C172); //Same A/C model here and in PIDManager class
+            this.stallTas = Performance.stallSpeed;
+            this.maxBank = Performance.maxBank;*/
+            //ACPerformance perf;
+            this.stallTas = perf.StallSpeed;
+            this.maxBank = perf.MaxBank;
+        }
+        
+
 
 		/*private AircraftPerformanceText ()
 		{

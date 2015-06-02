@@ -2,13 +2,13 @@ using System;
 
 namespace GroundStation
 {
-	public class ConsoleInput
+	public class XConsoleInput
 	{
-		private NavManager nav;
+		private XNavManager nav;
 		private GlobalArea ga;
 		private PIDManager pid;
 				
-		public ConsoleInput(NavManager nav)
+		public XConsoleInput(XNavManager nav)
 		{
 			this.nav = nav;
 			this.ga = GlobalArea.GetInstance();
@@ -296,28 +296,28 @@ namespace GroundStation
 				val = ga.Imu.pitch;
 				break;
             case "tm":
-                this.nav.Switch(NavManager.Mode.ATTITUDE);
+                this.nav.Switch(XNavManager.Mode.ATTITUDE);
                 break;
 			case "mm":
-				this.nav.Switch(NavManager.Mode.MANUAL);
+				this.nav.Switch(XNavManager.Mode.MANUAL);
 				break;
 			case "dm":
-				this.nav.Switch(NavManager.Mode.DIRECTED);
+				this.nav.Switch(XNavManager.Mode.DIRECTED);
 				break;
 			case "am":
-				this.nav.Switch(NavManager.Mode.AUTONOMOUS);
+				this.nav.Switch(XNavManager.Mode.AUTONOMOUS);
 				break;
 			case "ctm":
-				this.nav.Switch(NavManager.Mode.CALIBRATION_THROTTLE);
+				this.nav.Switch(XNavManager.Mode.CALIBRATION_THROTTLE);
 				break;
 			case "crm":
-				this.nav.Switch(NavManager.Mode.CALIBRATION_ROLL);
+				this.nav.Switch(XNavManager.Mode.CALIBRATION_ROLL);
 				break;
 			case "cpm":
-				this.nav.Switch(NavManager.Mode.CALIBRATION_PITCH);
+				this.nav.Switch(XNavManager.Mode.CALIBRATION_PITCH);
 				break;
 			case "cym":
-				this.nav.Switch(NavManager.Mode.CALIBRATION_YAW);
+				this.nav.Switch(XNavManager.Mode.CALIBRATION_YAW);
 				break;
 			case "tts":
 				double tts = -1;

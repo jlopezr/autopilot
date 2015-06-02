@@ -50,7 +50,7 @@ namespace GroundStation
 		/// <summary>
 		/// Constant p0. Standard static pressure at sea level. [Pa]
 		/// </summary>
-        private const int P0 = 101325;
+        private int P0 = 101325;
 		
 		/// <summary>
 		/// Constant lambda. Standard thermal gradient. [K/m]
@@ -194,6 +194,11 @@ namespace GroundStation
             ans.pitot = adc.pitot;
 
             return ans;
+        }
+
+        public void ChangeP0(int refpress)
+        {
+            P0 = refpress;
         }
 
     }

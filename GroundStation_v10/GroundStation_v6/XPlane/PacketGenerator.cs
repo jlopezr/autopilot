@@ -76,7 +76,7 @@ namespace XPlane
 		public static byte[] JoystickPacket(float throttle, float aileron, float ruder, float elevator)
 		{
 			byte[] data = XplanePacketGenerator.CreateData((byte)XplanePacketsId.Joystick, elevator, aileron, ruder, -999, -999, -999, -999, -999);
-			data = data.Concat(XplanePacketGenerator.CreateData((byte)XplanePacketsId.Throttle, throttle, throttle, -999, -999, -999, -999, -999, -999)).ToArray();
+            data = data.Concat(XplanePacketGenerator.CreateData((byte)XplanePacketsId.Throttle, throttle, throttle, throttle, throttle, -999, -999, -999, -999)).ToArray();
 
 			return XplanePacketGenerator.CreatePacket(data);
 		}

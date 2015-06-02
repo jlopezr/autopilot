@@ -18,14 +18,18 @@ namespace GroundStation
 			PITCH,
 			YAW
 		};
-		
-		
+
+        //PidConfig.ACModel ACmod;
+
+        private int model;
+
 		private object pidMutex;
         private PID rollPid;
         private PID pitchPid;
         private PID yawPid;
         private PID throttlePid;
 		private PID[] pids;
+
 		
 		private object chInMutex;
 		private byte[] chIn;
@@ -40,7 +44,7 @@ namespace GroundStation
 			}
 		}
 		
-		private PIDManager()
+		private PIDManager(PidConfig p, int model1)
 		{
 			this.chInMutex = new object();
 			this.pidMutex = new object();
@@ -55,19 +59,74 @@ namespace GroundStation
                 this.pids[2] = new EmptyPID();
                 this.pids[3] = new EmptyPID();
 			}
-			this.SetInfo();
+            this.SetInfo(p);
+            model = model1;
 		}
 		
-		public static PIDManager GetInstance()
+		/*public static PIDManager GetInstance()
 		{
 			if(instance == null)
 				instance = new PIDManager();
 			return instance;
-		}
-		        
-        private void SetInfo()
+		}*/
+
+        public static PIDManager GetInstance()
         {
-            PidConfig config = new PidConfig(PidConfig.ACModel.C172); //Change A/C model here and in AircraftPerformance class
+            if (instance == null)
+                Console.WriteLine("Error: null AircraftPerformance instance");
+            return instance;
+        }
+
+        public static PIDManager GetInstance(int m)
+        {
+            if (instance == null)
+            {
+                PidConfig p;
+                if (m == 1) //Models are used here
+                {
+                    p = new C172PidConfig();
+                    instance = new PIDManager(p,m);
+                }
+                if (m == 2)
+                {
+                    p = new RCPidConfig();
+                    instance = new PIDManager(p, m);
+                }
+                if (m == 3)
+                {
+                    p = new CirrusPidConfig();
+                    instance = new PIDManager(p, m);
+                }
+                if (m == 20)
+                {
+                    p = new QXPidConfig();
+                    instance = new PIDManager(p, m);
+                }
+            }
+
+            return instance;
+        }
+
+        /*public void SetModel(int m)
+        {
+            if (m == 1)
+            {
+                ACmod = PidConfig.ACModel.C172;
+            }
+            if (m == 2)
+            {
+                ACmod = PidConfig.ACModel.RC;
+            }
+            if (m == 3)
+            {
+                ACmod = PidConfig.ACModel.Cirrus;
+            }
+            this.SetInfo();
+        }*/
+		        
+        private void SetInfo(PidConfig config)
+        {
+            //PidConfig config = new PidConfig(ACmod); //Same A/C model here and in AircraftPerformance class
             int ch, offset, minVal, maxVal, meanVal;
             double spanFactor, imuTs = -1, adcTs = -1, kp, ki, kd, refValue;
             imuTs = config.imuTs;
@@ -250,13 +309,13 @@ namespace GroundStation
 			return ans;
 		}
 
-        public void SetChThrottle(AdcMessage adcMessage)
+        public void SetChThrottle(AdcMessage adcMessage, int model)
         {
 			double vel = adcMessage.tas;
 			lock(this.pidMutex)
 		    {
 				if(this.throttlePid != null)
-					this.throttlePid.SetValue(vel);
+					this.throttlePid.SetValue(vel, model);
 			}
         }
 

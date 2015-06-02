@@ -4,9 +4,9 @@ using System.IO;
 
 namespace GroundStation
 {
-	public class LatNav
+	public class XLatNav
 	{
-		private NavManager nav;
+		private XNavManager nav;
 		
 		private Queue<WgsPoint> dest;
 		private WgsPoint currPos;
@@ -100,11 +100,11 @@ namespace GroundStation
 		public double distDest;
 		public double latDev;
 		
-		public LatNav (WgsPoint origin, Queue<WgsPoint> dest, double ts, double kp, double ki, double kd)
+		public XLatNav (WgsPoint origin, Queue<WgsPoint> dest, double ts, double kp, double ki, double kd)
 		{
 			this.mutex = new object();
 			this.mutex2 = new object();
-			this.nav = NavManager.GetInstance();
+			this.nav = XNavManager.GetInstance();
 			
 			this.ts = ts;
 			this.kp = kp;

@@ -10,13 +10,21 @@ namespace GroundStation
 		{
             this.Name = "Throttle";
         }
-		
-		public override void SetValue(double input)
+
+        public override void SetValue(double input, int model)
 		{
+            input = -(input - this.refValue - this.initialVal);
+            if(model>=20)//Copters
+            {
+                this.RefreshPid(input);
+            }
+            else//Planes
+            {
+                this.RefreshPidThrottle(input);
+            }
             //Console.WriteLine("Speed:{0}", input);
-			input = -(input - this.refValue - this.initialVal);
-			this.RefreshPidThrottle(input);
-		}
+			
+        }
 	}
 }
 

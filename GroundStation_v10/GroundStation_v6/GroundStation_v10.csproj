@@ -42,8 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ACPerformance.cs" />
+    <Compile Include="Configuration\ACPerformance2.cs" />
+    <Compile Include="Configuration\C172ACPerformance.cs" />
+    <Compile Include="Configuration\C172PidConfig.cs" />
+    <Compile Include="Configuration\CirrusACPerformance.cs" />
+    <Compile Include="Configuration\CirrusPidConfig.cs" />
+    <Compile Include="Configuration\XNavConfig.cs" />
     <Compile Include="Configuration\NavConfig.cs" />
     <Compile Include="Configuration\PidConfig.cs" />
+    <Compile Include="Configuration\PidConfig2.cs" />
+    <Compile Include="Configuration\QXACPerformance.cs" />
+    <Compile Include="Configuration\QXPidConfig.cs" />
+    <Compile Include="Configuration\RCACPerformance.cs" />
+    <Compile Include="Configuration\RCPidConfig.cs" />
     <Compile Include="GlobalArea.cs" />
     <Compile Include="Input\Input.cs" />
     <Compile Include="Input\SerialInput.cs" />
@@ -52,6 +63,12 @@
     <Compile Include="Messages\ImuEulerMessage.cs" />
     <Compile Include="Messages\Message.cs" />
     <Compile Include="Messages\PwmMessage.cs" />
+    <Compile Include="Navigation\XLatNav.cs" />
+    <Compile Include="Navigation\XHeading .cs" />
+    <Compile Include="Navigation\XSpeed.cs" />
+    <Compile Include="Navigation\XConsoleInput.cs" />
+    <Compile Include="Navigation\XNavManager.cs" />
+    <Compile Include="Navigation\XAltitude.cs" />
     <Compile Include="Output\Output.cs" />
     <Compile Include="Point\HayPoint.cs" />
     <Compile Include="Point\Point.cs" />

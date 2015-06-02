@@ -17,7 +17,7 @@ namespace GroundStation
 		private static readonly int b19200 = 19200;*/
 		private static readonly int b57600 = 57600;
 		private static ulong time = 0;
-        private static int syncpack = 1; //Increases 1 for every packet
+        //private static int syncpack = 1; //Increases 1 for every packet
         private static Output op;
         public static void Run() //Se ejecuta desde Exec/Main
         {
@@ -35,17 +35,101 @@ namespace GroundStation
 		
 		private static void RunTelemetry()
 		{
-            //DateTime begin1 = DateTime.UtcNow;
+            //Set ref. pressure
+            bool correct = false;
+            double refpress1 = -1;
+            int refpress = -1;
 
+            while (!correct)
+            {
+                Console.WriteLine("Introduce reference pressure in mmHg (example: 29,92)");
+                Console.WriteLine("- For default pressure");
+                string linep = Console.ReadLine();
+                if(linep=="-")
+                {
+                    linep = "29,92";
+                }
+                try
+                {
+                    refpress1 = Convert.ToDouble(linep);
+                    if (refpress1 < 0)
+                    {
+                        Console.WriteLine("Invalid value, pressure must be positive");
+                    }
+                    if(refpress1>50)
+                    {
+                        Console.WriteLine("Invalid value, pressure too high");
+                    }
+                    else
+                    {
+                        refpress = (int)(refpress1 / 0.000295301);
+                        correct = true;
+                    }
+                }
+                catch (FormatException e)
+                {
+                    Console.WriteLine("Input string is not a sequence of digits.");
+                }
+            }
+
+            //Set A/C Model
+            bool acorrect = false;
+            int model = 0; //C172=1  RC=2   Cirrus=3
+            while (!acorrect)
+            {
+                Console.WriteLine("Introduce Aircraft model (Q, C172, RC or Cirrus)"); //Models needed in AircraftPerformance and PIDManager
+                string lineac = Console.ReadLine();
+                if ((lineac != "C172") && (lineac != "RC") && (lineac != "Cirrus") && (lineac != "Q"))
+                {
+                    Console.WriteLine("Wrong model");
+                }
+                else
+                {
+                    acorrect = true;
+                    if(lineac=="C172") //Use 1-19 for planes and >20 for Heli/Quadcopters 
+                    {
+                        model = 1;
+                    }
+                    if (lineac == "RC")
+                    {
+                        model = 2;
+                    }
+                    if (lineac == "Cirrus")
+                    {
+                        model = 3;
+                    }
+                    if (lineac == "Q")
+                    {
+                        model = 20;
+                    }
+                }
+                
+            }
+            AircraftPerformance ACp = AircraftPerformance.GetInstance(model);
+
+            //DateTime begin1 = DateTime.UtcNow;
             GlobalArea ga = GlobalArea.GetInstance();
             Database db = Database.GetInstance();
-			PIDManager pid = PIDManager.GetInstance();
-			NavManager nav = NavManager.GetInstance();
+			PIDManager pid = PIDManager.GetInstance(model);
+            //pid.SetModel(model);
+            NavManager nav = NavManager.GetInstance(); //NavManager for planes
+            XNavManager xnav = XNavManager.GetInstance(); //NavManager for Heli/Quadcopters
 			AdcMessage adc = new AdcMessage();
+            adc.ChangeP0(refpress);
 			ImuEulerMessage imu = new ImuEulerMessage();
 			PwmMessage pwm = new PwmMessage();
 			GpsPosMessage pos = new GpsPosMessage();
-			nav.Initialize();
+            if (model >= 20) //Use NavManager for Helicopters
+            {
+                xnav.Initialize();
+            }
+            else
+            {
+                nav.Initialize();
+            }
+			
+
+
             
             /*Input p;
 			//p = new SerialInput(path + telIn, b19200);
@@ -53,13 +137,15 @@ namespace GroundStation
 
             XplanePacketsId.Load(XplaneVersion.Xplane10);
             
-            XplaneConnection connection = new XplaneConnection();            
+            XplaneConnection connection = new XplaneConnection(); 
             //XplaneConnection connection = new XplaneConnection("10.211.55.2");
 
             XplaneParser parser = new XplaneParser(connection);
 
             connection.OpenConnections();
             parser.Start();
+
+
             PipeStream p = new PipeStream();
 
             Writer w = new Writer();
@@ -79,19 +165,25 @@ namespace GroundStation
                 {
                     case (byte)0: //IMU-Euler Angles
                         byte[] timebytes = p.ReadNBytes(5);
-                        float recetime = BitConverter.ToInt32(timebytes, 1);
+                        //float recetime = BitConverter.ToInt32(timebytes, 1);
                         //Console.WriteLine(recetime);
                         m = p.ReadNBytes(12);  //13 bytes son de la IMU y tienen: time/roll/pitch/yaw
                         float A = BitConverter.ToInt32(timebytes, 1)/10;
-                        int B = syncpack * 100000;
+                        //int B = syncpack * 100000;
                         float C = A /*- B*/;
                         float resul = C;
                         //Console.WriteLine("res:{0}", resul);
-                        if (C < 10000)
+                        if ((time + Convert.ToUInt64(C))<Int64.MaxValue)
                         {
                             time += Convert.ToUInt64(C);
-                            syncpack++;
                         }
+                        //time += Convert.ToUInt64(C);
+                        //if (C > Int64.MaxValue)
+                        /*{
+                            
+                            time += Convert.ToUInt64(C);
+                            //syncpack++;
+                        }*/
                         imu.CreateMessage(time, m);
                         ga.Imu = imu;
                         db.Add(ga.Imu);
@@ -100,8 +192,17 @@ namespace GroundStation
 						pid.SetChYaw(ga.Imu);
 						if(ga.IsReady())
 						{
-							nav.UpdateAltRef();
-							nav.UpdateHeadRef();
+                            if (model >= 20) //Use NavManager for Helicopters
+                            {
+                                xnav.UpdateAltRef();
+                                xnav.UpdateHeadRef();
+                                xnav.UpdateSpeedRef();
+                            }
+                            else
+                            {
+                                nav.UpdateAltRef();
+                                nav.UpdateHeadRef();
+                            }
 						}
                         break;
                     case (byte)3: //Adc
@@ -110,11 +211,20 @@ namespace GroundStation
                         adc.CreateMessage(time, m);
                         ga.Adc = adc;
                         db.Add(ga.Adc);
-						pid.SetChThrottle(adc);
+						pid.SetChThrottle(adc, model);
 						if(ga.IsReady())
 						{
-							nav.UpdateAltRef();
-							//nav.UpdateHeadRef();
+                            if (model >= 20) //Use NavManager for Helicopters
+                            {
+                                xnav.UpdateAltRef();
+                                //xnav.UpdateHeadRef();
+                                xnav.UpdateSpeedRef();
+                            }
+                            else
+                            {
+                                nav.UpdateAltRef();
+                                //nav.UpdateHeadRef();
+                            }
 						}
                         break;
                     case (byte)4: //Pwm   //9 bytes: time/ch1/ch2/ch3/ch4 (valor de variables chX entre 1000 y 2000) ocupan 2 bytes
@@ -144,7 +254,14 @@ namespace GroundStation
                         	db.Add(ga.Pos);
 							if(ga.IsReady())
 							{
-								nav.SetPosition(ga.Pos.pos);
+                                if (model >= 20) //Use NavManager for Helicopters
+                                {
+                                    xnav.SetPosition(ga.Pos.pos);
+                                }
+                                else
+                                {
+                                    nav.SetPosition(ga.Pos.pos);
+                                }
 							}
 						}
 						break;
@@ -172,7 +289,14 @@ namespace GroundStation
                 //byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, 0, 0, 0); //Centrar controles
 
                 byte[] ctlmess = XplanePacketGenerator.JoystickPacket(Throttle, joyposX, -999, joyposY);
+                
+
+                
+
+                //byte[] ctlmess = XplanePacketGenerator.JoystickPacket(-999, joyposX, -999, joyposY);
                 connection.SendPacket(ctlmess);
+                
+
 
                 //Console.WriteLine("control message");
                 //Console.WriteLine(Convert.ToDouble(pidctrl[0]));

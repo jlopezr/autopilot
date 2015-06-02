@@ -35,6 +35,7 @@ namespace XPlane
 		public static byte EnginePower = 34;
 		public static byte EngineThrust = 35;
 		public static byte EngineRPM = 37;
+        public static byte PropPitch = 39;
 		public static byte FuelFlow = 45;
 		public static byte OilPressure = 49;
 		public static byte OlitTem = 50;
@@ -76,6 +77,7 @@ namespace XPlane
 				EnginePower = 34;
 				EngineThrust = 35;
 				EngineRPM = 37;
+                PropPitch = 39;
 				FuelFlow = 45;
 				OilPressure = 49;
 				OlitTem = 50;
@@ -117,6 +119,7 @@ namespace XPlane
 				EnginePower = 34;
 				EngineThrust = 35;
 				EngineRPM = 37;
+                PropPitch = 39;
 				FuelFlow = 45;
 				OilPressure = 49;
 				OlitTem = 50;
