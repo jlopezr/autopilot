@@ -1,0 +1,5 @@
+#Serial ports
+path /dev/
+telIn ttyUSB0 19200
+pwmIn ttyUSB1 57600
+pwmOut ttyUSB2 57600

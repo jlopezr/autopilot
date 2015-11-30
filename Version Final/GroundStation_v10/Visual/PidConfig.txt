@@ -1,0 +1,43 @@
+#Sampling times
+imuTs 0.02
+adcTs 0.2
+
+#Throttle kp ki kd channel_number offset span min max mean initialReference
+
+#Valors trobats amb el matlab.
+#Planta assumida 0.06967, no depen de z
+#P: 14.38
+#PI: 0.101 2.02
+#PID: negatius...no tenen sentit
+
+throttle 1 0 -0.5 1 0 8 0 2000 0000 85
+
+#Roll kp ki kd channel_number offset span min max mean initialReference
+
+#Valors trobats amb el matlab
+#Planta assumida -0.01/(z-1)
+#P:-100
+#PI: -49.9 -66.6
+#PID: -1.95 -0.248 -0.097
+
+roll 100 1 0 2 000 8 0 2000 1000 0
+
+#Pitch kp ki kd channel_number offset span min max mean initialReference
+#Planta assumida 0.0025/(z-1)
+#P: 400
+#PI: 199 266
+#PID: 7.81 0.991 0.388
+
+#pitch 199 266 0 3 500 2 500 2000 1025 0
+pitch 40 1 0 3 000 8 0 2000 1000 0
+
+
+#Yaw kp ki kd channel_number offset span min max mean initialReference
+#P:
+#PI:
+#PID:
+#yaw 4 0 0 4 5500 6 500 2000 893 60
+yaw 4 0 0 4 00 8 000 2000 1000 00
+
+
+

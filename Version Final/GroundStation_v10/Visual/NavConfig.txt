@@ -1,0 +1,29 @@
+#Sampling times
+adcTs 0.2
+gpsTs 1
+
+#Altitude kp ki kd initialReference maxPitch minPitch
+altitude 0,1 0,000 0 500 10 -10
+
+#Heading kp ki kd initialReference maxRoll
+heading 2 0 0 0 30
+
+#LatNav kp ki kd origPosLat origPosLon 
+#latNav 10 0 0 41.626844 2.250726
+latNav 0,5 0 0 41,292216 2,063400
+
+#Flight Plan:: destPosLat destPosLon
+#41.627760 2.250749
+#41.626910 2.251182
+#41.626844 2.250726
+#41.627717 2.250249
+FP 8
+41,310580 2,119361
+41,299816 2,126444
+41,292458 2,103294
+41,272202 2,075522
+41,281305 2,070151
+41,292458 2,103294
+41,308461 2,094436
+41,298105 2,059405
+

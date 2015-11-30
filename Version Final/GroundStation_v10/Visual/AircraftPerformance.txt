@@ -1,0 +1,2 @@
+stallTas 50
+maxBank 30
